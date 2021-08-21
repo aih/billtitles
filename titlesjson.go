@@ -70,3 +70,17 @@ func LoadTitlesMap(titlePath string) (titleMap TitleMap, err error) {
 		return titleMap, nil
 	}
 }
+
+func SaveTitlesMap(titleMap TitleMap, titlePath string) (err error) {
+	jsonFile, err := os.Create(titlePath)
+	if err != nil {
+		return err
+	}
+	defer jsonFile.Close()
+	jsonByte, err := json.Marshal(titleMap)
+	if err != nil {
+		return err
+	}
+	jsonFile.Write(jsonByte)
+	return nil
+}

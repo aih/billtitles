@@ -5,50 +5,48 @@ import (
 	"errors"
 	"io/ioutil"
 	"os"
+	"sync"
 
 	"github.com/rs/zerolog/log"
 )
 
 // Opens maintitle file and has functions to add titles and billnumbers
 
-func AddTitle(titleMap TitleMap, title string) (TitleMap, error) {
-	titleMap[title] = make([]string, 0)
+func AddTitle(titleMap *sync.Map, title string) (*sync.Map, error) {
+	titleMap.LoadOrStore(title, make([]string, 0))
 	return titleMap, nil
 }
 
-func RemoveTitle(titleMap TitleMap, title string) (TitleMap, error) {
-	_, ok := titleMap[title]
-	if ok {
-		delete(titleMap, title)
-	}
+func RemoveTitle(titleMap *sync.Map, title string) (*sync.Map, error) {
+	titleMap.Delete(title)
 	return titleMap, nil
 }
 
-func GetTitle(titleMap TitleMap, title string) ([]string, error) {
-	_, ok := titleMap[title]
+func GetBillnumbersByTitle(titleMap *sync.Map, title string) (billnumbers []string, err error) {
+	results, ok := titleMap.Load(title)
 	if ok {
-		return titleMap[title], nil
+		billnumbers := results.([]string)
+		return billnumbers, nil
 	} else {
 		return nil, errors.New("Title not found")
 	}
 }
 
-func AddBillNumbersToTitle(titleMap TitleMap, title string, billnumbers []string) (TitleMap, error) {
-	_, ok := titleMap[title]
-	if ok {
-		titleMap[title] = RemoveDuplicates(append(titleMap[title], billnumbers...))
-	} else {
-		titleMap[title] = billnumbers
+func AddBillNumbersToTitle(titleMap *sync.Map, title string, billnumbers []string) (*sync.Map, error) {
+	if titleBills, loaded := titleMap.LoadOrStore(title, billnumbers); loaded {
+		titleBills = RemoveDuplicates(append(titleBills.([]string), billnumbers...))
+		titleMap.Store(title, titleBills)
 	}
 	return titleMap, nil
 
 }
 
-func LoadTitlesMap(titlePath string) (titleMap TitleMap, err error) {
+func LoadTitlesMap(titlePath string) (*sync.Map, error) {
+	titleMap := new(sync.Map)
 	if _, err := os.Stat(titlePath); os.IsNotExist(err) {
 		titlePath = TitlesPath
 		if _, err := os.Stat(titlePath); os.IsNotExist(err) {
-			return nil, errors.New("titles file file not found")
+			return titleMap, errors.New("titles file file not found")
 		}
 	}
 	jsonFile, err := os.Open(titlePath)
@@ -71,13 +69,13 @@ func LoadTitlesMap(titlePath string) (titleMap TitleMap, err error) {
 	}
 }
 
-func SaveTitlesMap(titleMap TitleMap, titlePath string) (err error) {
+func SaveTitlesMap(titleMap *sync.Map, titlePath string) (err error) {
 	jsonFile, err := os.Create(titlePath)
 	if err != nil {
 		return err
 	}
 	defer jsonFile.Close()
-	jsonByte, err := json.Marshal(titleMap)
+	jsonByte, err := MarshalJSONStringArray(titleMap)
 	if err != nil {
 		return err
 	}

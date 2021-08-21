@@ -45,10 +45,10 @@ func MarshalJSONStringArray(m *sync.Map) ([]byte, error) {
 	return json.Marshal(tmpMap)
 }
 
-// Unmarshals from JSON to a syncMap
+// Unmarshals from JSON in the form of map[string][]string to a syncMap
 // See https://stackoverflow.com/a/65442862/628748
-func UnmarshalJson(data []byte) (*sync.Map, error) {
-	var tmpMap map[interface{}]interface{}
+func UnmarshalTitlesJson(data []byte) (*sync.Map, error) {
+	var tmpMap map[string][]string
 	m := &sync.Map{}
 
 	if err := json.Unmarshal(data, &tmpMap); err != nil {
@@ -56,6 +56,7 @@ func UnmarshalJson(data []byte) (*sync.Map, error) {
 	}
 
 	for key, value := range tmpMap {
+		log.Debug().Msgf("key:%v value: %v", key, value)
 		m.Store(key, value)
 	}
 	return m, nil
@@ -70,13 +71,12 @@ func UnmarshalJsonFile(jpath string) (*sync.Map, error) {
 	defer jsonFile.Close()
 
 	jsonByte, _ := ioutil.ReadAll(jsonFile)
-	return UnmarshalJson(jsonByte)
+	return UnmarshalTitlesJson(jsonByte)
 }
 
 // Gets keys of a sync.Map
 func GetSyncMapKeys(m *sync.Map) (s string) {
 	m.Range(func(k, v interface{}) bool {
-		log.Info().Msgf("%s: %v", k, v)
 		if s != "" {
 			s += ", "
 		}

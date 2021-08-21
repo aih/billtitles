@@ -37,8 +37,22 @@ func main() {
 		} else {
 			log.Info().Msgf("Bill numbers for sample bill (%s): %v", sampleTitle, billnumbers)
 		}
-		billtitles.RemoveTitle(titleMap, "")
-		billtitles.SaveTitlesMap(titleMap, billtitles.MainTitlePath)
+		billtitles.AddBillNumbersToTitle(titleMap, "A test title", []string{"118hr222"})
+		billtitles.AddBillNumbersToTitle(titleMap, "A test title", []string{"118hr999"})
+		//billtitles.SaveTitlesMap(titleMap, billtitles.MainTitlePath)
+		newbillnumbers, err := billtitles.GetBillnumbersByTitle(titleMap, "A test title")
+		if err != nil {
+			log.Error().Msgf("Error getting bill numbers for title: %s", err)
+		} else {
+			log.Info().Msgf("Bill numbers for title: %s", newbillnumbers)
+		}
+		billtitles.RemoveTitle(titleMap, "A test title")
+		newbillnumbers, err = billtitles.GetBillnumbersByTitle(titleMap, "A test title")
+		if err != nil {
+			log.Error().Msgf("Error getting bill numbers for title: %s", err)
+		} else {
+			log.Info().Msgf("Bill numbers for title: %s", newbillnumbers)
+		}
 	}
 
 }

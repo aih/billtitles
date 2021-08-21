@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"strings"
 	"sync"
+
+	"github.com/rs/zerolog/log"
 )
 
 // Removes duplicates in a list of strings
@@ -39,4 +41,31 @@ func MarshalJSONStringArray(m *sync.Map) ([]byte, error) {
 		return true
 	})
 	return json.Marshal(tmpMap)
+}
+
+func UnmarshalJSON(data []byte) (*sync.Map, error) {
+	var tmpMap map[interface{}]interface{}
+	m := &sync.Map{}
+    
+	if err := json.Unmarshal(data, &tmpMap); err != nil {
+	    return m, err
+	}
+    
+	for key, value := range tmpMap {
+	    m.Store(key, value)
+	}
+	return m, nil
+}
+
+// Gets keys of a sync.Map
+func GetSyncMapKeys(m *sync.Map) (s string) {
+	m.Range(func(k, v interface{}) bool {
+		log.Info().Msgf("%s: %v", k, v)
+		if s != "" {
+			s += ", "
+		}
+		s += k.(string)
+		return true
+	})
+	return
 }

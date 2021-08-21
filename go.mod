@@ -3,6 +3,7 @@ module github.com/aih/billtitles
 go 1.17
 
 require (
+	github.com/joho/godotenv v1.3.0
 	github.com/rs/zerolog v1.23.0
 	gorm.io/driver/sqlite v1.1.4
 	gorm.io/gorm v1.21.13

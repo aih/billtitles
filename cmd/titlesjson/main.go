@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"os"
+	"sync"
 
 	"github.com/aih/billtitles"
 	"github.com/rs/zerolog"
@@ -10,6 +11,21 @@ import (
 )
 
 const sampleTitle = "21st Century Energy Workforce Act"
+
+func makeSampleTitlesFile(titleMap *sync.Map) {
+	defer func() { log.Info().Msg("done making samples file") }()
+	titles := new(sync.Map)
+	count := 0
+	titleMap.Range(func(key, value interface{}) bool {
+		count++
+		if count > 4 {
+			return false
+		}
+		titles.Store(key.(string), value.([]string))
+		return true
+	})
+	billtitles.SaveTitlesMap(titleMap, "data/sampletitles.json")
+}
 
 func main() {
 	debug := flag.Bool("debug", false, "sets log level to debug")
@@ -31,6 +47,7 @@ func main() {
 		log.Info().Msgf("%v", error)
 		panic(error)
 	} else {
+		makeSampleTitlesFile(titleMap)
 		billnumbers, ok := titleMap.Load(sampleTitle)
 		if !ok {
 			log.Error().Msgf("No bills found for: %s", sampleTitle)

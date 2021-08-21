@@ -2,7 +2,6 @@ package billtitles
 
 import (
 	"errors"
-	"io/ioutil"
 	"os"
 	"sync"
 
@@ -49,19 +48,8 @@ func LoadTitlesMap(titlePath string) (*sync.Map, error) {
 		}
 	}
 	log.Debug().Msgf("Path to JSON file: %s", titlePath)
-	jsonFile, err := os.Open(titlePath)
-	// if we os.Open returns an error then handle it
-	if err != nil {
-		return nil, err
-	}
-	log.Debug().Msg("Successfully opened Titles JSON file")
-
-	defer jsonFile.Close()
-
-	byteValue, _ := ioutil.ReadAll(jsonFile)
-
-	titleMap, err = UnmarshalJSON(byteValue)
-
+	var err error
+	titleMap, err = UnmarshalJsonFile(titlePath)
 	if err != nil {
 		return nil, err
 	} else {

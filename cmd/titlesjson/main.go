@@ -14,17 +14,19 @@ const sampleTitle = "21st Century Energy Workforce Act"
 
 func makeSampleTitlesFile(titleMap *sync.Map) {
 	defer func() { log.Info().Msg("done making samples file") }()
-	titles := new(sync.Map)
+	sampleTitles := new(sync.Map)
 	count := 0
 	titleMap.Range(func(key, value interface{}) bool {
-		count++
+		count += 1
 		if count > 4 {
+			log.Debug().Msgf("Returning 'false' from range loop")
 			return false
 		}
-		titles.Store(key.(string), value.([]string))
+		log.Debug().Msgf("Adding a title")
+		sampleTitles.Store(key.(string), value.([]string))
 		return true
 	})
-	billtitles.SaveTitlesMap(titleMap, "data/sampletitles.json")
+	billtitles.SaveTitlesMap(sampleTitles, "data/sampletitles.json")
 }
 
 func main() {
@@ -32,6 +34,7 @@ func main() {
 
 	// Default level for this example is info, unless debug flag is present
 	zerolog.SetGlobalLevel(zerolog.InfoLevel)
+	flag.Parse()
 	if *debug {
 		zerolog.SetGlobalLevel(zerolog.DebugLevel)
 	}
@@ -40,7 +43,6 @@ func main() {
 	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 	log.Debug().Msg("Log level set to Debug")
-	flag.Parse()
 
 	titleMap, error := billtitles.LoadTitlesMap(billtitles.MainTitlePath)
 	if error != nil {

@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"os"
-	"sync"
 
 	"github.com/aih/billtitles"
 	"github.com/rs/zerolog"
@@ -11,23 +10,6 @@ import (
 )
 
 const sampleTitle = "21st Century Energy Workforce Act"
-
-func makeSampleTitlesFile(titleMap *sync.Map) {
-	defer func() { log.Info().Msg("done making samples file") }()
-	sampleTitles := new(sync.Map)
-	count := 0
-	titleMap.Range(func(key, value interface{}) bool {
-		count += 1
-		if count > 4 {
-			log.Debug().Msgf("Returning 'false' from range loop")
-			return false
-		}
-		log.Debug().Msgf("Adding a title")
-		sampleTitles.Store(key.(string), value.([]string))
-		return true
-	})
-	billtitles.SaveTitlesMap(sampleTitles, "data/sampletitles.json")
-}
 
 func main() {
 	debug := flag.Bool("debug", false, "sets log level to debug")
@@ -44,34 +26,12 @@ func main() {
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 	log.Debug().Msg("Log level set to Debug")
 
-	titleMap, error := billtitles.LoadTitlesMap(billtitles.MainTitlePath)
+	_, error := billtitles.LoadTitlesMap(billtitles.MainTitlePath)
 	if error != nil {
 		log.Info().Msgf("%v", error)
 		panic(error)
-	} else {
-		makeSampleTitlesFile(titleMap)
-		billnumbers, ok := titleMap.Load(sampleTitle)
-		if !ok {
-			log.Error().Msgf("No bills found for: %s", sampleTitle)
-		} else {
-			log.Info().Msgf("Bill numbers for sample bill (%s): %v", sampleTitle, billnumbers)
-		}
-		billtitles.AddBillNumbersToTitle(titleMap, "A test title", []string{"118hr222"})
-		billtitles.AddBillNumbersToTitle(titleMap, "A test title", []string{"118hr999"})
-		//billtitles.SaveTitlesMap(titleMap, billtitles.MainTitlePath)
-		newbillnumbers, err := billtitles.GetBillnumbersByTitle(titleMap, "A test title")
-		if err != nil {
-			log.Error().Msgf("Error getting bill numbers for title: %s", err)
-		} else {
-			log.Info().Msgf("Bill numbers for title: %s", newbillnumbers)
-		}
-		billtitles.RemoveTitle(titleMap, "A test title")
-		newbillnumbers, err = billtitles.GetBillnumbersByTitle(titleMap, "A test title")
-		if err != nil {
-			log.Error().Msgf("Error getting bill numbers for title: %s", err)
-		} else {
-			log.Info().Msgf("Bill numbers for title: %s", newbillnumbers)
-		}
 	}
+
+	// TODO: create services to expose the map and add/remove functions
 
 }

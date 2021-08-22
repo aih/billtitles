@@ -70,3 +70,20 @@ func SaveTitlesMap(titleMap *sync.Map, titlePath string) (err error) {
 	jsonFile.Write(jsonByte)
 	return nil
 }
+
+func MakeSampleTitlesFile(titleMap *sync.Map) {
+	defer func() { log.Info().Msg("done making samples file") }()
+	sampleTitles := new(sync.Map)
+	count := 0
+	titleMap.Range(func(key, value interface{}) bool {
+		count += 1
+		if count > 4 {
+			log.Debug().Msgf("Returning 'false' from range loop")
+			return false
+		}
+		log.Debug().Msgf("Adding a title")
+		sampleTitles.Store(key.(string), value.([]string))
+		return true
+	})
+	SaveTitlesMap(sampleTitles, "data/sampletitles.json")
+}

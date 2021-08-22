@@ -21,8 +21,8 @@ var (
 	SampleTitleIndex    = "sampletitles.json"
 	PathToDataDir       = "data"
 	TitlesPath          = path.Join(PathToDataDir, TitleIndex)
-	MainTitlePath       = path.Join(PathToDataDir, MainTitleIndex)
-	SampleTitlePath     = path.Join(PathToDataDir, SampleTitleIndex)
+	MainTitlesPath      = path.Join(PathToDataDir, MainTitleIndex)
+	SampleTitlesPath    = path.Join(PathToDataDir, SampleTitleIndex)
 	BillVersionsOrdered = billVersions{"ih": 0, "rh": 1, "rfs": 2, "eh": 3, "es": 4, "enr": 5}
 	ZLogLevels          = LogLevels{"Debug": zerolog.DebugLevel, "Info": zerolog.InfoLevel, "Error": zerolog.ErrorLevel}
 )

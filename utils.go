@@ -56,7 +56,7 @@ func UnmarshalTitlesJson(data []byte) (*sync.Map, error) {
 	}
 
 	for key, value := range tmpMap {
-		log.Debug().Msgf("key:%v value: %v", key, value)
+		//log.Debug().Msgf("key:%v value: %v", key, value)
 		m.Store(key, value)
 	}
 	return m, nil

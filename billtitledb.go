@@ -124,7 +124,7 @@ func RunDbExample() {
 	log.Info().Msgf("Got bill item: %+v", bill)
 
 	// TODO: Getting error 'No such column: BillCongressTypeNumber'
-	db2.First(&bill, "BillCongressTypeNumber = ?", "117hr200") // find item with billnumber = 117hr200
+	db2.First(&bill, "billcongresstypenumber = ?", "117hr200") // find item with billnumber = 117hr200
 	log.Info().Msgf("Got bill item: %+v", bill)
 
 	db2.Model(&bill).Association("Titles").Find(&titles)

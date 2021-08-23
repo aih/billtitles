@@ -136,7 +136,11 @@ func RunDbExample() {
 		}
 	}
 
-	// Delete - delete title
-	db2.Delete(&title, 1)
+	// Delete - delete all items in product, bill and title tables
+	var dbill Bill
+	var dtitle Title
+	db.Delete(&product)
+	db2.Delete(&dbill)
+	db2.Delete(&dtitle)
 
 }

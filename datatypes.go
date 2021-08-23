@@ -1,5 +1,7 @@
 package billtitles
 
+import "gorm.io/gorm"
+
 type RelatedBillItem struct {
 	BillId                        string   `json:"bill_id"`
 	IdentifiedBy                  string   `json:"identified_by"`
@@ -12,13 +14,14 @@ type RelatedBillItem struct {
 }
 
 // Used for db functions
-type BillItem struct {
+type Bill struct {
+	gorm.Model
 	BillId                        string   `json:"bill_id"`
 	IdentifiedBy                  string   `json:"identified_by"`
 	Reason                        string   `json:"reason"`
 	Type                          string   `json:"type"`
 	BillCongressTypeNumber        string   `gorm:"not null" json:"bill_congress_type_number"`
-	BillCongressTypeNumberVersion string   `gorm:"primary_key" json:"bill_congress_type_number_version"`
+	BillCongressTypeNumberVersion string   `gorm:"index:,unique" json:"bill_congress_type_number_version"`
 	Titles                        []*Title `gorm:"many2many:bill_titles;" json:"titles"`
 	TitlesWholeBill               []*Title `gorm:"many2many:bill_titleswhole" json:"titles_whole_bill"`
 }

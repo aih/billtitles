@@ -8,8 +8,8 @@ import (
 
 type Title struct {
 	gorm.Model
-	Name  string      `gorm:"index:,unique"`
-	Bills []*BillItem `gorm:"many2many:bill_titles;"`
+	Name  string  `gorm:"index:,unique"`
+	Bills []*Bill `gorm:"many2many:bill_titles;"`
 }
 
 func MakeBillAndTitle() {

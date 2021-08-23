@@ -47,10 +47,11 @@ func RunExample() {
 	}
 
 	// Migrate the schema
-	db2.AutoMigrate(&BillItem{}, &Title{})
+	db2.AutoMigrate(&Bill{}, &Title{})
 
 	// Create
-	db2.Create(&Title{Name: "This is a test title"})
+	db2.Create(&Title{Name: "This is a test title",
+		Bills: []*Bill{{BillCongressTypeNumberVersion: "116hr1500ih", BillCongressTypeNumber: "116hr1500"}, {BillCongressTypeNumberVersion: "117hr200ih", BillCongressTypeNumber: "117hr200i"}}})
 
 	// Read
 	var title Title
@@ -62,6 +63,18 @@ func RunExample() {
 	// Update - update title
 	db2.Model(&title).Update("Name", "This is a new test title")
 	log.Info().Msgf("Title %v updated", title)
+
+	var sampleBill Bill
+	db.Take(&sampleBill)
+	log.Info().Msgf("Got sample bill item: %v", sampleBill)
+
+	var bill Bill
+	var titles []Title
+	bctnvs := []string{"116hr1500ih", "116hr200rh", "115hr2200ih"}
+
+	db.Model(&bill).Where("BillCongressTypeNumberVersion IN ?", bctnvs).Association("Title").Find(&titles)
+	log.Info().Msgf("Got bill item: %v", bill)
+	log.Info().Msgf("With titles: %v", titles)
 
 	// Delete - delete title
 	db2.Delete(&title, 1)

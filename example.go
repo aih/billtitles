@@ -27,7 +27,7 @@ func RunExample() {
 
 	// Read
 	var product Product
-	db.First(&product, 1)                 // find product with integer primary key
+	//db.First(&product, 1)                 // find product with integer primary key
 	db.First(&product, "code = ?", "D42") // find product with code D42
 
 	// Update - update product's price to 200
@@ -40,4 +40,30 @@ func RunExample() {
 
 	// Delete - delete product
 	db.Delete(&product, 1)
+
+	db2, err := gorm.Open(sqlite.Open("billtitles.db"), &gorm.Config{})
+	if err != nil {
+		panic("failed to connect database")
+	}
+
+	// Migrate the schema
+	db2.AutoMigrate(&BillItem{}, &Title{})
+
+	// Create
+	db2.Create(&Title{Name: "This is a test title"})
+
+	// Read
+	var title Title
+	//db2.First(&title, 1)                                  // find product with integer primary key
+	db2.First(&title, "name = ?", "This is a test title") // find product with code D42
+	log.Info().Msgf("Got title item: %v", title)
+	log.Info().Msgf("Got title item: %v", title.Name)
+
+	// Update - update title
+	db2.Model(&title).Update("Name", "This is a new test title")
+	log.Info().Msgf("Title %v updated", title)
+
+	// Delete - delete title
+	db2.Delete(&title, 1)
+
 }

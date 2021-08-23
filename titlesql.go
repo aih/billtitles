@@ -6,18 +6,10 @@ import (
 	"gorm.io/gorm"
 )
 
-// User has and belongs to many languages, use `user_languages` as join table
-type Bill struct {
-	gorm.Model
-	Number string   `gorm:",unique"`
-	Titles []*Title `gorm:"many2many:user_languages:foreignKey:Number;"`
-}
-
 type Title struct {
 	gorm.Model
-	Name       string  `gorm:"index:,unique"`
-	BillNumber string  `gorm:"index:,unique"`
-	Bills      []*Bill `gorm:"many2many:user_languages;"`
+	Name  string      `gorm:"index:,unique"`
+	Bills []*BillItem `gorm:"many2many:bill_titles;"`
 }
 
 func MakeBillAndTitle() {

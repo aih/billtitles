@@ -50,7 +50,7 @@ func RunDbExample() {
 		stdlog.New(os.Stdout, "\r\n", stdlog.LstdFlags), // io writer
 		logger.Config{
 			SlowThreshold:             time.Second, // Slow SQL threshold
-			LogLevel:                  logger.Info, // Log level
+			LogLevel:                  logger.Warn, // Log level
 			IgnoreRecordNotFoundError: true,        // Ignore ErrRecordNotFound error for logger
 			Colorful:                  false,       // Disable color
 		},
@@ -66,10 +66,10 @@ func RunDbExample() {
 	// Migrate the schema
 	db2.AutoMigrate(&Bill{}, &Title{})
 
-	newBill1 := &Bill{BillCongressTypeNumberVersion: "116hr1500ih", BillCongressTypeNumber: "116hr1500"}
-	newBill2 := &Bill{BillCongressTypeNumberVersion: "117hr200ih", BillCongressTypeNumber: "117hr200"}
-	newBill3 := &Bill{BillCongressTypeNumberVersion: "117hr100ih", BillCongressTypeNumber: "117hr100"}
-	newBill4 := &Bill{BillCongressTypeNumberVersion: "117hr222ih", BillCongressTypeNumber: "117hr222"}
+	newBill1 := &Bill{Billnumberversion: "116hr1500ih", Billnumber: "116hr1500"}
+	newBill2 := &Bill{Billnumberversion: "117hr200ih", Billnumber: "117hr200"}
+	newBill3 := &Bill{Billnumberversion: "117hr100ih", Billnumber: "117hr100"}
+	newBill4 := &Bill{Billnumberversion: "117hr222ih", Billnumber: "117hr222"}
 	newTitle := &Title{Title: "This is a test title", Bills: []*Bill{newBill1, newBill3}}
 	db2.Session(&gorm.Session{FullSaveAssociations: true})
 
@@ -94,7 +94,7 @@ func RunDbExample() {
 		log.Info().Msg("Got no associated bill item.")
 	} else {
 		for _, associatedBill := range associatedBills {
-			log.Info().Msgf("Got bill associated with the title item: %s", associatedBill.BillCongressTypeNumberVersion)
+			log.Info().Msgf("Got bill associated with the title item: %s", associatedBill.Billnumberversion)
 		}
 	}
 
@@ -105,7 +105,7 @@ func RunDbExample() {
 	var sampleBill Bill
 	var associatedTitles []*Title
 	db2.Take(&sampleBill)
-	log.Info().Msgf("Got sample bill item: %v", sampleBill.BillCongressTypeNumberVersion)
+	log.Info().Msgf("Got sample bill item: %v", sampleBill.Billnumberversion)
 	db2.Model(&sampleBill).Association("Titles").Find(&associatedTitles)
 	if len(associatedTitles) == 0 {
 		log.Info().Msg("Got no associated title item.")
@@ -116,18 +116,18 @@ func RunDbExample() {
 	}
 
 	var bill Bill
+	var bill2 Bill
 	var titles []Title
 	//bctnvs := []string{"116hr1500ih", "116hr200rh", "115hr2200ih"}
 	//bctns := []string{"116hr1500", "116hr200", "115hr2200"}
 
 	db2.First(&bill, "ID = ?", "1") // find item with any of the billnumbers in bctnvs
-	log.Info().Msgf("Got bill item: %+v", bill)
+	log.Info().Msgf("Got bill item for ID=1: %+v", bill)
 
-	// TODO: Getting error 'No such column: BillCongressTypeNumber'
-	db2.First(&bill, "billcongresstypenumber = ?", "117hr200") // find item with billnumber = 117hr200
-	log.Info().Msgf("Got bill item: %+v", bill)
+	db2.First(&bill2, "Billnumber = ?", "117hr200") // find item with billnumber = 117hr200
+	log.Info().Msgf("Got bill item for billnumber=117hr200: %+v", bill2)
 
-	db2.Model(&bill).Association("Titles").Find(&titles)
+	db2.Model(&bill2).Association("Titles").Find(&titles)
 	if len(titles) == 0 {
 		log.Info().Msg("Got no associated title item.")
 	} else {

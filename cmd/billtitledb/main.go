@@ -5,5 +5,5 @@ import (
 )
 
 func main() {
-	billtitles.RunExample()
+	billtitles.RunDbExample()
 }

@@ -94,8 +94,12 @@ func GetTitlesByBillnumberDb(db *gorm.DB, billnumber string) []*Title {
 	return titles
 }
 
-func GetTitlesByBillnumberVersionDb(db *gorm.DB, billnumberversion string) (titles []*Title) {
-	db.Model(&Bill{Billnumberversion: billnumberversion}).Association("Titles").Find(&titles)
+func GetTitlesByBillnumberVersionDb(db *gorm.DB, billnumberversion string) []*Title {
+	var titles []*Title
+	var bills []*Bill
+	db.Where("Billnumberversion = ?", billnumberversion).Find(&bills)
+	db.Model(bills).Association("Titles").Find(&titles)
+	log.Info().Msgf("titles: %+v", titles)
 	return titles
 }
 

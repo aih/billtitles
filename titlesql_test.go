@@ -24,6 +24,14 @@ var newLogger = logger.New(
 	},
 )
 
+func TestBillNumberVersionToBillNumber(t *testing.T) {
+	assert.Equal(t, "116hr200", BillNumberVersionToBillNumber("116hr200ih"))
+}
+
+func TestBillNumberVersionsToBillNumbers(t *testing.T) {
+	assert.Equal(t, []string{"116hr200", "117hjres20"}, BillNumberVersionsToBillNumbers([]string{"116hr200ih", "117hjres20ih"}))
+}
+
 func TestCreateAndGetTitle(t *testing.T) {
 	// Setup
 	var db, _ = gorm.Open(sqlite.Open("test.db"), &gorm.Config{
@@ -69,7 +77,7 @@ func TestCreateAndGetTitle(t *testing.T) {
 		assert.Equal(t, 3, len(associatedBills))
 	})
 
-	t.Run("Add a title entry", func(t *testing.T) {
+	t.Run("Add a title entry with db.Model", func(t *testing.T) {
 		// Update - update title
 		db.Model(&title).Update("Title", "This is a new test title")
 		log.Debug().Msgf("Title '%v' updated", title.Title)
@@ -104,6 +112,23 @@ func TestCreateAndGetTitle(t *testing.T) {
 		db.Model(&bill2).Association("Titles").Find(&titles)
 		log.Debug().Msg("Got no associated title item.")
 		assert.Equal(t, 0, len(titles))
+	})
+
+	t.Run("Add Title using AddTitleDB", func(t *testing.T) {
+		newTitle := "This Title Added with AddTitleDB function"
+		AddTitleDb(db, newTitle)
+		var newTitle2 Title
+		db.First(&newTitle2, "title = ?", newTitle) // find title
+		assert.Equal(t, newTitle, newTitle2.Title)
+	})
+	t.Run("Add bills using AddBillnumberversionsDb", func(t *testing.T) {
+		AddBillnumberversionsDb(db, []string{"115hr100ih", "116hr999rh"})
+		var bill3 Bill
+		var bill4 Bill
+		db.First(&bill3, "Billnumber = ?", "115hr100") // find bill
+		assert.Equal(t, "115hr100ih", bill3.Billnumberversion)
+		db.First(&bill4, "Billnumberversion = ?", "116hr999rh") // find bill
+		assert.Equal(t, "116hr999", bill4.Billnumber)
 	})
 
 	// Delete - delete all items in bill and title tables

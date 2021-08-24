@@ -43,11 +43,16 @@ func TestCreateAndGetTitle(t *testing.T) {
 	testutils.SetLogLevel()
 	log.Info().Msg("Test setting and getting titles and bills from sql db")
 
+	const (
+		titleString  = "This is a test title"
+		titleString2 = "This is a new test title"
+		titleString3 = "This Title Added with AddTitleDB function"
+	)
 	newBill1 := &Bill{Billnumberversion: "116hr1500ih", Billnumber: "116hr1500"}
 	newBill2 := &Bill{Billnumberversion: "117hr200ih", Billnumber: "117hr200"}
 	newBill3 := &Bill{Billnumberversion: "117hr100ih", Billnumber: "117hr100"}
 	newBill4 := &Bill{Billnumberversion: "117hr222ih", Billnumber: "117hr222"}
-	newTitle := &Title{Title: "This is a test title", Bills: []*Bill{newBill1, newBill3}}
+	newTitle := &Title{Title: titleString, Bills: []*Bill{newBill1, newBill3}}
 	db.Session(&gorm.Session{FullSaveAssociations: true})
 
 	// Create
@@ -64,22 +69,37 @@ func TestCreateAndGetTitle(t *testing.T) {
 	var associatedBills []*Bill
 
 	t.Run("Get Title", func(t *testing.T) {
-		db.First(&title, "title = ?", "This is a test title") // find title
+		db.First(&title, "title = ?", titleString) // find title
 		log.Debug().Msgf("Got title item: %v", title)
 		log.Debug().Msgf("Title item has the title: %v", title.Title)
-		assert.Equal(t, "This is a test title", title.Title)
+		assert.Equal(t, titleString, title.Title)
 	})
 	t.Run("Get Associated Bills", func(t *testing.T) {
-		db.First(&title, "title = ?", "This is a test title") // find title with Title = "This is a test title"
+		db.First(&title, "title = ?", titleString) // find title with Title = "This is a test title"
 		db.Model(title).Association("Bills").Find(&associatedBills)
 		assert.NotEqual(t, 0, len(associatedBills))
 		log.Debug().Msgf("Associated bills: %+v", associatedBills)
 		assert.Equal(t, 3, len(associatedBills))
 	})
 
+	t.Run("Get Associated bills using GetBillsByTitleDb", func(t *testing.T) {
+		associatedBills := GetBillsByTitleDb(db, titleString)
+		assert.NotEqual(t, 0, len(associatedBills))
+		log.Debug().Msgf("Associated bills: %+v", associatedBills)
+		assert.Equal(t, 3, len(associatedBills))
+	})
+
+	t.Run("Test GetTitlesByBillnumberDb", func(t *testing.T) {
+		titles := GetTitlesByBillnumberDb(db, "116hr1500")
+		assert.NotEqual(t, 0, len(titles))
+		log.Debug().Msgf("Associated titles: %+v", titles)
+		assert.Equal(t, 1, len(titles))
+		assert.Equal(t, titleString, titles[0].Title)
+	})
+
 	t.Run("Add a title entry with db.Model", func(t *testing.T) {
 		// Update - update title
-		db.Model(&title).Update("Title", "This is a new test title")
+		db.Model(&title).Update("Title", titleString2)
 		log.Debug().Msgf("Title '%v' updated", title.Title)
 		var sampleBill Bill
 		var associatedTitles []*Title
@@ -115,11 +135,10 @@ func TestCreateAndGetTitle(t *testing.T) {
 	})
 
 	t.Run("Add Title using AddTitleDB", func(t *testing.T) {
-		newTitle := "This Title Added with AddTitleDB function"
-		AddTitleDb(db, newTitle)
-		var newTitle2 Title
-		db.First(&newTitle2, "title = ?", newTitle) // find title
-		assert.Equal(t, newTitle, newTitle2.Title)
+		AddTitleDb(db, titleString3)
+		var newTitle Title
+		db.First(&newTitle, "title = ?", titleString3) // find title
+		assert.Equal(t, titleString3, newTitle.Title)
 	})
 	t.Run("Add bills using AddBillnumberversionsDb", func(t *testing.T) {
 		AddBillnumberversionsDb(db, []string{"115hr100ih", "116hr999rh"})
@@ -129,6 +148,16 @@ func TestCreateAndGetTitle(t *testing.T) {
 		assert.Equal(t, "115hr100ih", bill3.Billnumberversion)
 		db.First(&bill4, "Billnumberversion = ?", "116hr999rh") // find bill
 		assert.Equal(t, "116hr999", bill4.Billnumber)
+	})
+
+	t.Run("Remove Title by string", func(t *testing.T) {
+		var newTitle1 Title
+		var newTitle2 Title
+		err := db.Where("title = ?", titleString3).First(&newTitle1).Error
+		assert.Nil(t, err)
+		RemoveTitleDb(db, titleString3)
+		err = db.Where("title = ?", titleString3).First(&newTitle2).Error
+		assert.NotNil(t, err)
 	})
 
 	// Delete - delete all items in bill and title tables

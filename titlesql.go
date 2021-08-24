@@ -5,6 +5,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/rs/zerolog/log"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -46,7 +47,7 @@ func GetDb(dbname string) *gorm.DB {
 		stdlog.New(os.Stdout, "\r\n", stdlog.LstdFlags), // io writer
 		logger.Config{
 			SlowThreshold:             time.Second, // Slow SQL threshold
-			LogLevel:                  logger.Warn, // Log level
+			LogLevel:                  logger.Info, // Log level
 			IgnoreRecordNotFoundError: true,        // Ignore ErrRecordNotFound error for logger
 			Colorful:                  false,       // Disable color
 		},
@@ -70,20 +71,26 @@ func AddBillnumberversionsDb(db *gorm.DB, billnumberversions []string) {
 	}
 }
 
-func RemoveTitleDb(db *gorm.DB, title string, bill *Bill) {
-	//db.Model(&bill).Association("Titles").Delete(title)
-	//db.Model(&bill).Association("TitlesWhole").Delete(title)
-	db.Delete(&Title{Title: title})
+func RemoveTitleDb(db *gorm.DB, title string) {
+	db.Model(&Bill{}).Association("Titles").Delete(title)
+	db.Model(&Bill{}).Association("TitlesWhole").Delete(title)
+	db.Where("Title = ?", title).Delete(&Title{})
 }
 
 func GetBillsByTitleDb(db *gorm.DB, title string) []*Bill {
 	var bills []*Bill
-	db.Model(&Title{Title: title}).Association("Bills").Find(&bills)
+	var titleStruct Title
+	db.First(&titleStruct, "Title = ?", title)
+	db.Model(titleStruct).Association("Bills").Find(&bills)
 	return bills
 }
 
-func GetTitlesByBillnumberDb(db *gorm.DB, billnumber string) (titles []*Title) {
-	db.Model(&Bill{Billnumber: billnumber}).Association("Titles").Find(&titles)
+func GetTitlesByBillnumberDb(db *gorm.DB, billnumber string) []*Title {
+	var titles []*Title
+	var bills []*Bill
+	db.Where("Billnumber = ?", billnumber).Find(&bills)
+	db.Model(bills).Association("Titles").Find(&titles)
+	log.Info().Msgf("titles: %+v", titles)
 	return titles
 }
 

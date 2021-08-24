@@ -97,6 +97,14 @@ func TestCreateAndGetTitle(t *testing.T) {
 		assert.Equal(t, titleString, titles[0].Title)
 	})
 
+	t.Run("Test GetTitlesByBillnumberVersionDb", func(t *testing.T) {
+		titles := GetTitlesByBillnumberVersionDb(db, "117hr100ih")
+		assert.NotEqual(t, 0, len(titles))
+		log.Debug().Msgf("Associated titles: %+v", titles)
+		assert.Equal(t, 1, len(titles))
+		assert.Equal(t, titleString, titles[0].Title)
+	})
+
 	t.Run("Add a title entry with db.Model", func(t *testing.T) {
 		// Update - update title
 		db.Model(&title).Update("Title", titleString2)

@@ -12,13 +12,13 @@ const sampleTitle1 = "Expressing the sense of the House of Representatives that 
 
 func TestLoadTitles(t *testing.T) {
 	testutils.SetLogLevel()
-	log.Info().Msg("Test loading titles from json")
+	log.Debug().Msg("Test loading titles from json")
 	_, error := LoadTitlesMap(SampleTitlesPath)
 	assert.Nil(t, error)
 }
 func TestGetTitle(t *testing.T) {
 	testutils.SetLogLevel()
-	log.Info().Msg("Test getting title from loaded json")
+	log.Debug().Msg("Test getting title from loaded json")
 	titleMap, _ := LoadTitlesMap(SampleTitlesPath)
 	billnumbers, err := GetBillnumbersByTitle(titleMap, sampleTitle1)
 	assert.Nil(t, err)
@@ -26,7 +26,7 @@ func TestGetTitle(t *testing.T) {
 }
 func TestAddBillNumbersToTitle(t *testing.T) {
 	testutils.SetLogLevel()
-	log.Info().Msg("Test adding a sample title ")
+	log.Debug().Msg("Test adding a sample title ")
 	titleMap, _ := LoadTitlesMap(SampleTitlesPath)
 	AddBillNumbersToTitle(titleMap, "A test title", []string{"118hr222"})
 	AddBillNumbersToTitle(titleMap, "A test title", []string{"118hr999"})
@@ -37,7 +37,7 @@ func TestAddBillNumbersToTitle(t *testing.T) {
 
 func TestRemoveTitle(t *testing.T) {
 	testutils.SetLogLevel()
-	log.Info().Msg("Test removing a title ")
+	log.Debug().Msg("Test removing a title ")
 	titleMap, _ := LoadTitlesMap(SampleTitlesPath)
 	AddBillNumbersToTitle(titleMap, "A test title", []string{"118hr222"})
 	AddBillNumbersToTitle(titleMap, "A test title", []string{"118hr999"})

@@ -42,7 +42,7 @@ func TestCreateAndGetTitle(t *testing.T) {
 	db.AutoMigrate(&Bill{}, &Title{})
 	db.Session(&gorm.Session{FullSaveAssociations: true})
 	testutils.SetLogLevel()
-	log.Info().Msg("Test setting and getting titles and bills from sql db")
+	log.Debug().Msg("Test setting and getting titles and bills from sql db")
 
 	const (
 		titleString  = "This is a test title"

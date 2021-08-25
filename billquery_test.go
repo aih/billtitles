@@ -19,7 +19,7 @@ var sampleWholeTitles = []string{sampleTitle}
 
 func TestGetRelatedBills(t *testing.T) {
 	testutils.SetLogLevel()
-	log.Info().Msg("Test querying title maps for related bills")
+	log.Debug().Msg("Test querying title maps for related bills")
 	titleMap, error := LoadTitlesMap(TitlesPath)
 	if error != nil {
 		log.Info().Msgf("%v", error)

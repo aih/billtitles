@@ -18,7 +18,7 @@ var newLogger = logger.New(
 	stdlog.New(os.Stdout, "\r\n", stdlog.LstdFlags), // io writer
 	logger.Config{
 		SlowThreshold:             time.Second, // Slow SQL threshold
-		LogLevel:                  logger.Warn, // Log level
+		LogLevel:                  logger.Info, // Log level
 		IgnoreRecordNotFoundError: true,        // Ignore ErrRecordNotFound error for logger
 		Colorful:                  false,       // Disable color
 	},
@@ -40,6 +40,7 @@ func TestCreateAndGetTitle(t *testing.T) {
 
 	// Migrate the schema
 	db.AutoMigrate(&Bill{}, &Title{})
+	db.Session(&gorm.Session{FullSaveAssociations: true})
 	testutils.SetLogLevel()
 	log.Info().Msg("Test setting and getting titles and bills from sql db")
 
@@ -59,11 +60,8 @@ func TestCreateAndGetTitle(t *testing.T) {
 	// Create
 	db.Create(newTitle)
 	db.Create(newBill2)
-	db.Save(newTitle)
-	db.Save(newBill2)
 
 	db.Model(newTitle).Association("Bills").Append([]Bill{*newBill4})
-	//db.Session(&gorm.Session{FullSaveAssociations: true}).Updates(&newTitle)
 
 	// Read
 	var title Title
@@ -137,6 +135,11 @@ func TestCreateAndGetTitle(t *testing.T) {
 		log.Debug().Msgf("Title '%s' associated with %s", associatedTitles[0].Title, newBill1.Billnumber)
 		assert.NotNil(t, associatedTitles)
 		assert.NotEqual(t, 0, len(associatedTitles))
+	})
+
+	t.Run("Get bills using GetBillsWithSameTitleDb", func(t *testing.T) {
+		bills := GetBillsWithSameTitleDb(db, "116hr1500")
+		log.Info().Msgf("Related bills: %+v", bills)
 	})
 
 	var bill Bill

@@ -77,16 +77,14 @@ func RemoveTitleDb(db *gorm.DB, title string) {
 	db.Where("Title = ?", title).Delete(&Title{})
 }
 
-func GetBillsByTitleDb(db *gorm.DB, title string) []*Bill {
-	var bills []*Bill
+func GetBillsByTitleDb(db *gorm.DB, title string) (bills []*Bill) {
 	var titleStruct Title
 	db.First(&titleStruct, "Title = ?", title)
 	db.Model(titleStruct).Association("Bills").Find(&bills)
 	return bills
 }
 
-func GetTitlesByBillnumberDb(db *gorm.DB, billnumber string) []*Title {
-	var titles []*Title
+func GetTitlesByBillnumberDb(db *gorm.DB, billnumber string) (titles []*Title) {
 	var bills []*Bill
 	db.Where("Billnumber = ?", billnumber).Find(&bills)
 	db.Model(bills).Association("Titles").Find(&titles)
@@ -94,8 +92,7 @@ func GetTitlesByBillnumberDb(db *gorm.DB, billnumber string) []*Title {
 	return titles
 }
 
-func GetTitlesByBillnumberVersionDb(db *gorm.DB, billnumberversion string) []*Title {
-	var titles []*Title
+func GetTitlesByBillnumberVersionDb(db *gorm.DB, billnumberversion string) (titles []*Title) {
 	var bills []*Bill
 	db.Where("Billnumberversion = ?", billnumberversion).Find(&bills)
 	db.Model(bills).Association("Titles").Find(&titles)
@@ -103,14 +100,20 @@ func GetTitlesByBillnumberVersionDb(db *gorm.DB, billnumberversion string) []*Ti
 	return titles
 }
 
-func GetTitlesWholeByBillnumberDb(db *gorm.DB, billnumber string) (titleswhole []*Title) {
-	db.Model(&Bill{Billnumber: billnumber}).Association("TitlesWhole").Find(&titleswhole)
-	return titleswhole
+func GetTitlesWholeByBillnumberDb(db *gorm.DB, billnumber string) (titles []*Title) {
+	var bills []*Bill
+	db.Where("Billnumber = ?", billnumber).Find(&bills)
+	db.Model(bills).Association("TitlesWhole").Find(&titles)
+	log.Debug().Msgf("titles: %+v", titles)
+	return titles
 }
 
-func GetTitlesWholeByBillnumberVersionDb(db *gorm.DB, billnumberversion string) (titleswhole []*Title) {
-	db.Model(&Bill{Billnumberversion: billnumberversion}).Association("Titles").Find(&titleswhole)
-	return titleswhole
+func GetTitlesWholeByBillnumberVersionDb(db *gorm.DB, billnumberversion string) (titles []*Title) {
+	var bills []*Bill
+	db.Where("Billnumberversion = ?", billnumberversion).Find(&bills)
+	db.Model(bills).Association("TitlesWhole").Find(&titles)
+	log.Debug().Msgf("titles: %+v", titles)
+	return titles
 }
 
 func AddBillsToTitleDb(db *gorm.DB, title string, bills []*Bill) {

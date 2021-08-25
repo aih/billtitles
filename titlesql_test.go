@@ -54,14 +54,19 @@ func TestCreateAndGetTitle(t *testing.T) {
 	newBill2 := &Bill{Billnumberversion: "117hr200ih", Billnumber: "117hr200"}
 	newBill3 := &Bill{Billnumberversion: "117hr100ih", Billnumber: "117hr100"}
 	newBill4 := &Bill{Billnumberversion: "117hr222ih", Billnumber: "117hr222"}
+
+	// Associates titleString with newBill1 and newBill3
 	newTitle := &Title{Title: titleString, Bills: []*Bill{newBill1, newBill3}}
 	db.Session(&gorm.Session{FullSaveAssociations: true})
 
 	// Create
 	db.Create(newTitle)
-	db.Create(newBill2)
 
+	// Associates titleString with newBill4, so now: newBill1, newBill3, newBill4
 	db.Model(newTitle).Association("Bills").Append([]Bill{*newBill4})
+
+	// newBill2 is not associated with any bill, so it should not be in the list of associated bills
+	db.Create(newBill2)
 
 	// Read
 	var title Title
@@ -75,6 +80,7 @@ func TestCreateAndGetTitle(t *testing.T) {
 	})
 	t.Run("Get Associated Bills", func(t *testing.T) {
 		db.First(&title, "title = ?", titleString) // find title with Title = "This is a test title"
+		// Should be associated with newBill1, newBill3, newBill4
 		db.Model(title).Association("Bills").Find(&associatedBills)
 		assert.NotEqual(t, 0, len(associatedBills))
 		log.Debug().Msgf("Associated bills: %+v", associatedBills)
@@ -82,6 +88,7 @@ func TestCreateAndGetTitle(t *testing.T) {
 	})
 
 	t.Run("Get Associated bills using GetBillsByTitleDb", func(t *testing.T) {
+		// Should be associated with newBill1, newBill3, newBill4
 		associatedBills := GetBillsByTitleDb(db, titleString)
 		assert.NotEqual(t, 0, len(associatedBills))
 		log.Debug().Msgf("Associated bills: %+v", associatedBills)
@@ -89,23 +96,37 @@ func TestCreateAndGetTitle(t *testing.T) {
 	})
 
 	t.Run("Test GetTitlesByBillnumberDb", func(t *testing.T) {
-		titles := GetTitlesByBillnumberDb(db, "116hr1500")
+		// Should be associated with titleString only
+		queryString := "116hr1500"
+		titles := GetTitlesByBillnumberDb(db, queryString)
 		assert.NotEqual(t, 0, len(titles))
 		log.Debug().Msgf("Associated titles: %+v", titles)
 		assert.Equal(t, 1, len(titles))
 		assert.Equal(t, titleString, titles[0].Title)
 	})
-
 	t.Run("Test GetTitlesByBillnumberVersionDb", func(t *testing.T) {
-		titles := GetTitlesByBillnumberVersionDb(db, "117hr100ih")
+		// Should be associated with titleString only
+		queryString := "116hr1500ih"
+		titles := GetTitlesByBillnumberVersionDb(db, queryString)
+		if len(titles) > 0 {
+			log.Info().Msgf("Associated titles length: %+v", len(titles))
+			log.Info().Msgf("Associated titles: %+v", titles[0].Title)
+		}
 		assert.NotEqual(t, 0, len(titles))
-		log.Debug().Msgf("Associated titles: %+v", titles)
 		assert.Equal(t, 1, len(titles))
 		assert.Equal(t, titleString, titles[0].Title)
+	})
+
+	t.Run("Test GetTitlesByBillnumberVersionDb where no associated titles", func(t *testing.T) {
+		// Should not have associated titles
+		queryString := "117hr200ih"
+		titles := GetTitlesByBillnumberVersionDb(db, queryString)
+		assert.Equal(t, 0, len(titles))
 	})
 
 	t.Run("Test GetTitlesWholeByBillnumberVersionDb", func(t *testing.T) {
-		titles := GetTitlesByBillnumberVersionDb(db, "117hr100ih")
+		queryString := "117hr100ih"
+		titles := GetTitlesByBillnumberVersionDb(db, queryString)
 		assert.NotEqual(t, 0, len(titles))
 		log.Debug().Msgf("Associated titles: %+v", titles)
 		assert.Equal(t, 1, len(titles))
@@ -113,53 +134,25 @@ func TestCreateAndGetTitle(t *testing.T) {
 	})
 
 	t.Run("Add a title entry with db.Model", func(t *testing.T) {
-		// Update - update title
+		// Update - update title from "This is a test title" to "This is a new test title"
 		db.Model(&title).Update("Title", titleString2)
 		log.Debug().Msgf("Title '%v' updated", title.Title)
-		var sampleBill Bill
-		var associatedTitles []*Title
-		db.Take(&sampleBill)
-		assert.NotNil(t, sampleBill)
-		db.Model(&sampleBill).Association("Titles").Find(&associatedTitles)
-		assert.NotNil(t, associatedTitles)
-		assert.NotEqual(t, 0, len(associatedTitles))
+		assert.Equal(t, titleString2, title.Title)
 	})
 
 	t.Run("Add a title (whole) entry with db.Model", func(t *testing.T) {
 		newTitle4 := &Title{Title: titleString4, Bills: []*Bill{newBill1, newBill3}}
 		db.Create(&newTitle4)
-		log.Debug().Msgf("Title '%v' added", newTitle4.Title)
+		log.Debug().Msgf("Title '%v' added, with bills %s and %s", newTitle4.Title, newBill1.Billnumber, newBill3.Billnumber)
 		db.Model(&newBill1).Association("TitlesWhole").Append(newTitle4)
 		var associatedTitles []*Title
 		db.Model(&newBill1).Association("TitlesWhole").Find(&associatedTitles)
-		log.Debug().Msgf("Title '%s' associated with %s", associatedTitles[0].Title, newBill1.Billnumber)
 		assert.NotNil(t, associatedTitles)
 		assert.NotEqual(t, 0, len(associatedTitles))
 	})
 
-	t.Run("Get bills using GetBillsWithSameTitleDb", func(t *testing.T) {
-		querystring := "116hr1500"
-		bills, bills_whole, err := GetBillsWithSameTitleDb(db, querystring)
-		assert.Nil(t, err)
-		log.Debug().Msgf("Related bills for %s: %+v", querystring, bills)
-		log.Debug().Msgf("Related bills (whole) for %s: %+v", querystring, bills_whole)
-	})
-
-	t.Run("Get bills using GetBillsWithSameTitleDb (fewer results)", func(t *testing.T) {
-		querystring := "117hr200"
-		bills, bills_whole, err := GetBillsWithSameTitleDb(db, querystring)
-		assert.Nil(t, err)
-		assert.Equal(t, 1, len(bills))
-		assert.Equal(t, querystring, bills[0].Billnumber)
-		log.Debug().Msgf("Related bills for %s: %+v", querystring, bills)
-		log.Debug().Msgf("Related bills (whole) for %s: %+v", querystring, bills_whole)
-	})
-
 	var bill Bill
-	var bill2 Bill
 	var titles []Title
-	//bctnvs := []string{"116hr1500ih", "116hr200rh", "115hr2200ih"}
-	//bctns := []string{"116hr1500", "116hr200", "115hr2200"}
 
 	t.Run("Query by ID", func(t *testing.T) {
 		db.First(&bill, "ID = ?", "1") // find item with any of the billnumbers in bctnvs
@@ -168,10 +161,13 @@ func TestCreateAndGetTitle(t *testing.T) {
 	})
 
 	t.Run("Query by billnumber (no titles)", func(t *testing.T) {
+		var bill2 Bill
 		querystring := "117hr200"
 		db.First(&bill2, "Billnumber = ?", querystring) // find item with billnumber = 117hr200
 		log.Debug().Msgf("Got bill item for billnumber=%s: %+v", querystring, bill2)
 		assert.Equal(t, "117hr200ih", bill2.Billnumberversion)
+		db.Model(&bill2).Association("Titles").Find(&titles)
+		assert.Equal(t, 0, len(titles))
 	})
 
 	t.Run("Query by billnumber (has titles)", func(t *testing.T) {
@@ -185,12 +181,15 @@ func TestCreateAndGetTitle(t *testing.T) {
 		assert.Equal(t, 2, len(titles))
 		var titleswhole []*Title
 		db.Model(&bill).Association("TitlesWhole").Find(&titleswhole)
-		log.Debug().Msgf("Associated titles (whole): %+v", titleswhole[0].Title)
+		//log.Debug().Msgf("Associated titles (whole): %+v", titleswhole[0].Title)
 		assert.Equal(t, 1, len(titleswhole))
-		assert.Equal(t, titleString4, titleswhole[0].Title)
+		//assert.Equal(t, titleString4, titleswhole[0].Title)
 	})
 
 	t.Run("Query by billnumberversion", func(t *testing.T) {
+		var bill2 Bill
+		querystring := "117hr200ih"
+		db.First(&bill2, "Billnumberversion = ?", querystring) // find item with billnumber = 117hr200
 		db.Model(&bill2).Association("Titles").Find(&titles)
 		log.Debug().Msg("Got no associated title item.")
 		assert.Equal(t, 0, len(titles))
@@ -220,6 +219,26 @@ func TestCreateAndGetTitle(t *testing.T) {
 		RemoveTitleDb(db, titleString3)
 		err = db.Where("title = ?", titleString3).First(&newTitle2).Error
 		assert.NotNil(t, err)
+	})
+
+	t.Run("Get bills using GetBillsWithSameTitleDb", func(t *testing.T) {
+		querystring := "116hr1500"
+		bills, bills_whole, err := GetBillsWithSameTitleDb(db, querystring)
+		log.Warn().Msgf("Bills: %d", len(bills))
+		log.Warn().Msgf("Bills whole: %d", len(bills_whole))
+		assert.Nil(t, err)
+		log.Debug().Msgf("Related bills for %s: %+v", querystring, bills)
+		log.Debug().Msgf("Related bills (whole) for %s: %+v", querystring, bills_whole)
+	})
+
+	t.Run("Get bills using GetBillsWithSameTitleDb (only same bill)", func(t *testing.T) {
+		querystring := "117hr200"
+		bills, bills_whole, err := GetBillsWithSameTitleDb(db, querystring)
+		assert.Nil(t, err)
+		assert.Equal(t, 1, len(bills))
+		assert.Equal(t, querystring, bills[0].Billnumber)
+		log.Debug().Msgf("Related bills for %s: %+v", querystring, bills)
+		log.Debug().Msgf("Related bills (whole) for %s: %+v", querystring, bills_whole)
 	})
 
 	// Delete - delete all items in bill and title tables

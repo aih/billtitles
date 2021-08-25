@@ -17,9 +17,9 @@ const (
 var sampleTitles = []string{sampleTitle1, sampleTitle2}
 var sampleWholeTitles = []string{sampleTitle}
 
-func TestGetRelatedBills(t *testing.T) {
+func TestGetRelatedBillsFromJson(t *testing.T) {
 	testutils.SetLogLevel()
-	log.Debug().Msg("Test querying title maps for related bills")
+	log.Debug().Msg("Test querying title maps for related bills from stored Json Map")
 	titleMap, error := LoadTitlesMap(TitlesPath)
 	if error != nil {
 		log.Info().Msgf("%v", error)

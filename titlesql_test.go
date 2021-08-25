@@ -18,7 +18,7 @@ var newLogger = logger.New(
 	stdlog.New(os.Stdout, "\r\n", stdlog.LstdFlags), // io writer
 	logger.Config{
 		SlowThreshold:             time.Second, // Slow SQL threshold
-		LogLevel:                  logger.Info, // Log level
+		LogLevel:                  logger.Warn, // Log level
 		IgnoreRecordNotFoundError: true,        // Ignore ErrRecordNotFound error for logger
 		Colorful:                  false,       // Disable color
 	},
@@ -138,8 +138,21 @@ func TestCreateAndGetTitle(t *testing.T) {
 	})
 
 	t.Run("Get bills using GetBillsWithSameTitleDb", func(t *testing.T) {
-		bills := GetBillsWithSameTitleDb(db, "116hr1500")
-		log.Info().Msgf("Related bills: %+v", bills)
+		querystring := "116hr1500"
+		bills, bills_whole, err := GetBillsWithSameTitleDb(db, querystring)
+		assert.Nil(t, err)
+		log.Debug().Msgf("Related bills for %s: %+v", querystring, bills)
+		log.Debug().Msgf("Related bills (whole) for %s: %+v", querystring, bills_whole)
+	})
+
+	t.Run("Get bills using GetBillsWithSameTitleDb (fewer results)", func(t *testing.T) {
+		querystring := "117hr200"
+		bills, bills_whole, err := GetBillsWithSameTitleDb(db, querystring)
+		assert.Nil(t, err)
+		assert.Equal(t, 1, len(bills))
+		assert.Equal(t, querystring, bills[0].Billnumber)
+		log.Debug().Msgf("Related bills for %s: %+v", querystring, bills)
+		log.Debug().Msgf("Related bills (whole) for %s: %+v", querystring, bills_whole)
 	})
 
 	var bill Bill

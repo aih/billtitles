@@ -26,16 +26,19 @@ func main() {
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 	log.Debug().Msg("Log level set to Debug")
 
-	titleMap, error := billtitles.LoadTitlesMap(billtitles.TitlesPath)
-	if error != nil {
-		log.Info().Msgf("%v", error)
-		panic(error)
-	}
-	billnumbers, err := billtitles.GetBillnumbersByTitle(titleMap, sampleTitle)
-	if err != nil {
-		log.Info().Msgf("Error getting related bills: %v", err)
-	}
-	log.Debug().Msgf("%v", billnumbers)
+	/*
+		titleMap, error := billtitles.LoadTitlesMap(billtitles.TitlesPath)
+		if error != nil {
+			log.Info().Msgf("%v", error)
+			panic(error)
+		}
+		billnumbers, err := billtitles.GetBillnumbersByTitle(titleMap, sampleTitle)
+		if err != nil {
+			log.Info().Msgf("Error getting related bills: %v", err)
+		}
+		log.Debug().Msgf("%v", billnumbers)
+	*/
+	billtitles.LoadTitlesToDBFromJson(billtitles.GetDb(billtitles.BILLTITLES_DB), billtitles.TitlesPath)
 
 	// TODO: create services to expose the map and add/remove functions
 

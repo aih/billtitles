@@ -48,7 +48,7 @@ func GetDb(dbname string) *gorm.DB {
 		stdlog.New(os.Stdout, "\r\n", stdlog.LstdFlags), // io writer
 		logger.Config{
 			SlowThreshold:             time.Second, // Slow SQL threshold
-			LogLevel:                  logger.Info, // Log level
+			LogLevel:                  logger.Warn, // Log level
 			IgnoreRecordNotFoundError: true,        // Ignore ErrRecordNotFound error for logger
 			Colorful:                  false,       // Disable color
 		},
@@ -58,13 +58,25 @@ func GetDb(dbname string) *gorm.DB {
 	})
 	// May not be necessary; applies all associated changes
 	// when updating a title or bill.
+	db.AutoMigrate(&Bill{}, &Title{})
 	db.Session(&gorm.Session{FullSaveAssociations: true})
 	return db
 }
 
-func AddTitleDb(db *gorm.DB, title string) {
-	db.Create(&Title{Title: title})
+func AddTitleDb(db *gorm.DB, title string) *gorm.DB {
+	tx := db.Create(&Title{Title: title})
+	return tx
 }
+
+func AddTitleStructDb(db *gorm.DB, title *Title) {
+	// For example
+	// bills = [&Bill{Billnumberversion: "117hr100ih", Billnumber: "117hr100"},
+	// &Bill{Billnumberversion: "117hr222ih", Billnumber: "117hr222"}]
+	//newTitle := &Title{Title: titleString, Bills: bills}
+
+	db.Create(title)
+}
+
 func AddBillnumberversionsDb(db *gorm.DB, billnumberversions []string) {
 	billnumberversions = RemoveDuplicates(billnumberversions)
 	for _, billnumberversion := range billnumberversions {
@@ -154,4 +166,39 @@ func GetBillsWithSameTitleDb(db *gorm.DB, billnumber string) (bills, bills_whole
 		return bills, bills_whole, fmt.Errorf("no bills found for billnumber %s", billnumber)
 	}
 	return bills, bills_whole, nil
+}
+
+/* TODO: Load all bills from JSON and associate them with titles and whole titles.
+   TODO: Create a service to:
+    	- Add a bill+title and bill+titlewhole to the database.
+    	- Remove a title or titlewhole from the database.
+     	- Query the database by billnumber for related titles and titleswhole.
+     	- Query the database by title (string) for bills that have that title or whole title
+*/
+
+// jsonPath := TitlesPath
+// db := GetDb(BILLTITLES_DB)
+// NOTE: This adds all bills at the 'ih' version,
+// since we currently only have the json map with billnumbers, not billnumberversions
+func LoadTitlesToDBFromJson(db *gorm.DB, jsonPath string) {
+	log.Info().Msgf("Loading titles to database from json file: %s", jsonPath)
+	titleMap, error := LoadTitlesMap(jsonPath)
+	if error != nil {
+		log.Fatal().Msgf("Error loading titles: %s", error)
+	}
+	titleMap.Range(func(key, value interface{}) bool {
+		billnumbers := value.([]string)
+		if len(billnumbers) > 0 {
+			log.Info().Msgf("Adding billnumbers %+v to title `%s`", billnumbers, key)
+			bills := []*Bill{}
+			for _, billnumber := range billnumbers {
+				billnumberversion := billnumber + "ih"
+				bills = append(bills, &Bill{Billnumber: billnumber, Billnumberversion: billnumberversion})
+			}
+			title := Title{Title: key.(string), Bills: bills}
+			db.Create(&title)
+
+		}
+		return true
+	})
 }

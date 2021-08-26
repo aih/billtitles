@@ -129,10 +129,6 @@ func GetTitlesWholeByBillnumberVersionDb(db *gorm.DB, billnumberversion string) 
 	return titles
 }
 
-func AddBillsToTitleDb(db *gorm.DB, title string, bills []*Bill) {
-	db.Model(&Title{Title: title}).Association("Bills").Append(bills)
-}
-
 func GetBillsWithSameTitleDb(db *gorm.DB, billnumber string) (bills, bills_whole []*Bill, err error) {
 	var titles []*Title
 	var titleswhole []*Title

@@ -49,6 +49,7 @@ func TestCreateAndGetTitle(t *testing.T) {
 		titleString2 = "This is a new test title"
 		titleString3 = "This Title Added with AddTitleDB function"
 		titleString4 = "This is a title for a whole bill"
+		titleString5 = "Title to append bills to"
 	)
 	newBill1 := &Bill{Billnumberversion: "116hr1500ih", Billnumber: "116hr1500"}
 	newBill2 := &Bill{Billnumberversion: "117hr200ih", Billnumber: "117hr200"}

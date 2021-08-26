@@ -212,6 +212,31 @@ func TestCreateAndGetTitle(t *testing.T) {
 		assert.Equal(t, "116hr999", bill4.Billnumber)
 	})
 
+	t.Run("Add bill by Struct (with titles)", func(t *testing.T) {
+		var title5 Title
+		var associatedBills []*Bill
+		var associatedTitles []*Title
+		bill5 := Bill{Billnumber: "111hr100", Billnumberversion: "111hr100ih", Titles: []*Title{{Title: titleString5}, {Title: titleString5 + "2"}}}
+		AddBillStructDb(db, &bill5)
+		// Equivalent to:
+		//db.Create(&bill5)
+		log.Debug().Msgf("Bill '%v' added, with titles '%s' and '%s'", bill5.Billnumberversion, titleString5, titleString5+"2")
+
+		var newbill Bill
+		db.First(&newbill, "Billnumberversion = ?", "111hr100ih") // find bill with billnumberversion = 111hr100ih
+
+		// Should be associated with title5 and title5+2
+		db.Model(newbill).Association("Titles").Find(&associatedTitles)
+		assert.Equal(t, 2, len(associatedTitles))
+		log.Info().Msgf("Titles for bill '%s': %+v", newbill.Billnumberversion, associatedBills)
+
+		db.First(&title5, "title = ?", titleString5) // find title with Title = titleString5
+		// Should be associated with bill5
+		db.Model(title5).Association("Bills").Find(&associatedBills)
+		assert.Equal(t, 1, len(associatedBills))
+		log.Info().Msgf("Bills with title '%s': %+v", titleString5, associatedBills)
+	})
+
 	t.Run("Remove Title by string", func(t *testing.T) {
 		var newTitle1 Title
 		var newTitle2 Title

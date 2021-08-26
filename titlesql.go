@@ -84,6 +84,10 @@ func AddBillnumberversionsDb(db *gorm.DB, billnumberversions []string) {
 	}
 }
 
+func AddBillStructDb(db *gorm.DB, billStruct *Bill) {
+	db.Create(&billStruct)
+}
+
 func RemoveTitleDb(db *gorm.DB, title string) {
 	db.Model(&Bill{}).Association("Titles").Delete(title)
 	db.Model(&Bill{}).Association("TitlesWhole").Delete(title)
@@ -164,7 +168,7 @@ func GetBillsWithSameTitleDb(db *gorm.DB, billnumber string) (bills, bills_whole
 	return bills, bills_whole, nil
 }
 
-/* TODO: Load all bills from JSON and associate them with titles and whole titles.
+/*
    TODO: Create a service to:
     	- Add a bill+title and bill+titlewhole to the database.
     	- Remove a title or titlewhole from the database.

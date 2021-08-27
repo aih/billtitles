@@ -23,13 +23,17 @@ type message struct {
 	Message string `json:"message"`
 }
 
+type relatedBills struct {
+	Bills      []*billtitles.Bill `json:"bills"`
+	BillsWhole []*billtitles.Bill `json:"bills_whole"`
+}
+
 //----------
 // Handlers
 //----------
 
 func homePage(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Welcome to the HomePage!")
-	fmt.Println("Endpoint Hit: homePage")
+	json.NewEncoder(w).Encode(&message{"Welcome to the billtitles API!"})
 }
 
 func getBill(w http.ResponseWriter, r *http.Request) {
@@ -60,9 +64,11 @@ func getRelatedBills(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	billnumber := billtitles.BillnumberRegexCompiled.ReplaceAllString(billString, "$1$2$3")
-	bills, _, err := billtitles.GetBillsWithSameTitleDb(db, billnumber)
-	mytitles := billtitles.GetTitlesByBillnumberDb(db, bills[0].Billnumber)
-	log.Info().Msgf("Found %d titles related to sample bill: %+v", len(mytitles), mytitles[0].Title)
+	bills, bills_whole, err := billtitles.GetBillsWithSameTitleDb(db, billnumber)
+	if len(bills) > 0 {
+		mytitles := billtitles.GetTitlesByBillnumberDb(db, bills[0].Billnumber)
+		log.Debug().Msgf("Found %d titles related to sample bill: %+v", len(mytitles), mytitles[0].Title)
+	}
 	if err != nil {
 		fmt.Println(err)
 		json.NewEncoder(w).Encode(&message{err.Error()})
@@ -70,7 +76,7 @@ func getRelatedBills(w http.ResponseWriter, r *http.Request) {
 
 	}
 
-	json.NewEncoder(w).Encode(bills)
+	json.NewEncoder(w).Encode(&relatedBills{bills, bills_whole})
 }
 
 func handleRequests() {

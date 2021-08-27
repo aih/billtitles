@@ -160,8 +160,14 @@ func GetBillsWithSameTitleDb(db *gorm.DB, billnumber string) (bills, bills_whole
 			titleWholeStrings = append(titleWholeStrings, title.Title)
 		}
 
-		db.Raw("SELECT bills.billnumber FROM bills, titles, bill_titles ON bill_titles.title_id = titles.id WHERE titles.Title IN ?", titleStrings).Scan(&bills)
-		db.Raw("SELECT bills.* FROM bills, titles, bill_titleswhole ON bill_titleswhole.title_id = titles.id WHERE titles.Title IN ?", titleWholeStrings).Scan(&bills_whole)
+		log.Info().Msgf("Found titles related to this bill: %+v", titleStrings)
+
+		// Working!
+		db.Raw("SELECT bills.billnumber, titles.Title FROM bills INNER JOIN bill_titles ON bills.id = bill_titles.bill_id INNER JOIN titles ON titles.id = bill_titles.title_id WHERE titles.Title IN ?", titleStrings).Scan(&bills)
+		log.Debug().Msgf("Found %d bills related to this bill's titles", len(bills))
+
+		//db.Raw("SELECT bills.* FROM bills, titles, bill_titleswhole ON bill_titleswhole.title_id = titles.id WHERE titles.Title IN ?", titleWholeStrings).Scan(&bills_whole)
+		//log.Debug().Msgf("Found %d bills related to this bill's whole titles", len(bills_whole))
 	} else {
 		return bills, bills_whole, fmt.Errorf("no bills found for billnumber %s", billnumber)
 	}

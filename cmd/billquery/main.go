@@ -1,82 +1,88 @@
 package main
 
 import (
+	"encoding/json"
+	"fmt"
+	stdlog "log"
+
 	"net/http"
-	"strconv"
 
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
+	"github.com/aih/billtitles"
+	"github.com/rs/zerolog/log"
 )
 
-type (
-	user struct {
-		ID   int    `json:"id"`
-		Name string `json:"name"`
-	}
-)
+/*
+NOTE: I tried to create a service with echo and then with gin.
+In both cases, importing the billtitles package (and in particular, something related to opening the SQLite database)
+led to segfaults. Serving with plain net/http works.
+*/
 
-var (
-	users = map[int]*user{}
-	seq   = 1
-)
+const serverPort = ":3333"
 
-const serverPort = ":1323"
+type message struct {
+	Message string `json:"message"`
+}
 
 //----------
 // Handlers
 //----------
 
-func createUser(c echo.Context) error {
-	u := &user{
-		ID: seq,
+func homePage(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Welcome to the HomePage!")
+	fmt.Println("Endpoint Hit: homePage")
+}
+
+func getBill(w http.ResponseWriter, r *http.Request) {
+	var db = billtitles.GetDb("")
+
+	var bill billtitles.Bill
+	billString := r.URL.Query().Get("bill")
+	if billString == "" {
+		noBill := "No bill specified"
+
+		json.NewEncoder(w).Encode(&message{noBill})
+		return
 	}
-	if err := c.Bind(u); err != nil {
-		return err
+	billnumber := billtitles.BillnumberRegexCompiled.ReplaceAllString(billString, "$1$2$3")
+	db.Find(&bill, "Billnumberversion = ?", billnumber)
+	fmt.Println("{}", bill)
+
+	json.NewEncoder(w).Encode(bill)
+}
+func getRelatedBills(w http.ResponseWriter, r *http.Request) {
+	var db = billtitles.GetDb("")
+
+	billString := r.URL.Query().Get("bill")
+	if billString == "" {
+		noBill := "No bill specified"
+
+		json.NewEncoder(w).Encode(&message{noBill})
+		return
 	}
-	users[u.ID] = u
-	seq++
-	return c.JSON(http.StatusCreated, u)
-}
+	billnumber := billtitles.BillnumberRegexCompiled.ReplaceAllString(billString, "$1$2$3")
+	bills, _, err := billtitles.GetBillsWithSameTitleDb(db, billnumber)
+	mytitles := billtitles.GetTitlesByBillnumberDb(db, bills[0].Billnumber)
+	log.Info().Msgf("Found %d titles related to sample bill: %+v", len(mytitles), mytitles[0].Title)
+	if err != nil {
+		fmt.Println(err)
+		json.NewEncoder(w).Encode(&message{err.Error()})
+		return
 
-func getUser(c echo.Context) error {
-	id, _ := strconv.Atoi(c.Param("id"))
-	return c.JSON(http.StatusOK, users[id])
-}
-
-func updateUser(c echo.Context) error {
-	u := new(user)
-	if err := c.Bind(u); err != nil {
-		return err
 	}
-	id, _ := strconv.Atoi(c.Param("id"))
-	users[id].Name = u.Name
-	return c.JSON(http.StatusOK, users[id])
+
+	json.NewEncoder(w).Encode(bills)
 }
 
-func deleteUser(c echo.Context) error {
-	id, _ := strconv.Atoi(c.Param("id"))
-	delete(users, id)
-	return c.NoContent(http.StatusNoContent)
-}
-
-func getAllUsers(c echo.Context) error {
-	return c.JSON(http.StatusOK, users)
+func handleRequests() {
+	http.HandleFunc("/", homePage)
+	http.HandleFunc("/bills", getBill)
+	http.HandleFunc("/related", getRelatedBills)
+	fmt.Println("***********************")
+	fmt.Println("Server started on port:", serverPort)
+	fmt.Println("***********************")
+	stdlog.Fatal(http.ListenAndServe(serverPort, nil))
 }
 
 func main() {
-	e := echo.New()
-
-	// Middleware
-	e.Use(middleware.Logger())
-	e.Use(middleware.Recover())
-
-	// Routes
-	e.GET("/users", getAllUsers)
-	e.POST("/users", createUser)
-	e.GET("/users/:id", getUser)
-	e.PUT("/users/:id", updateUser)
-	e.DELETE("/users/:id", deleteUser)
-
-	// Start server
-	e.Logger.Fatal(e.Start(serverPort))
+	handleRequests()
 }

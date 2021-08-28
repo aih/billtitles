@@ -1,0 +1,68 @@
+{
+ "115hr6972": {
+  "bill_id": "hr6972-115",
+  "identified_by": "BillMap",
+  "reason": "bills-title_match_main, bills-title_match",
+  "type": "",
+  "bill_congress_type_number": "115hr6972",
+  "titles": [
+   "Consumers First Act",
+   "To require the Consumer Financial Protection Bureau to meet its statutory purpose, and for other purposes."
+  ],
+  "titles_whole_bill": [
+   "Consumers First Act",
+   "To require the Consumer Financial Protection Bureau to meet its statutory purpose, and for other purposes."
+  ]
+ },
+ "116hr1500": {
+  "bill_id": "hr1500-116",
+  "identified_by": "BillMap",
+  "reason": "bills-title_match_main, bills-title_match",
+  "type": "",
+  "bill_congress_type_number": "116hr1500",
+  "titles": [
+   "Consumers First Act",
+   "To require the Consumer Financial Protection Bureau to meet its statutory purpose, and for other purposes."
+  ],
+  "titles_whole_bill": [
+   "Consumers First Act",
+   "To require the Consumer Financial Protection Bureau to meet its statutory purpose, and for other purposes."
+  ]
+ },
+ "116hr4664": {
+  "bill_id": "hr4664-116",
+  "identified_by": "CRS",
+  "reason": "related",
+  "type": "bill",
+  "bill_congress_type_number": "",
+  "titles": null,
+  "titles_whole_bill": null
+ },
+ "116hr963": {
+  "bill_id": "hr963-116",
+  "identified_by": "CRS",
+  "reason": "related",
+  "type": "bill",
+  "bill_congress_type_number": "",
+  "titles": null,
+  "titles_whole_bill": null
+ },
+ "116hres389": {
+  "bill_id": "hres389-116",
+  "identified_by": "House",
+  "reason": "related",
+  "type": "bill",
+  "bill_congress_type_number": "",
+  "titles": null,
+  "titles_whole_bill": null
+ },
+ "116s331": {
+  "bill_id": "s331-116",
+  "identified_by": "CRS",
+  "reason": "related",
+  "type": "bill",
+  "bill_congress_type_number": "",
+  "titles": null,
+  "titles_whole_bill": null
+ }
+}

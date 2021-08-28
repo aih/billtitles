@@ -1,0 +1,156 @@
+<mods xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.loc.gov/mods/v3" version="3.3" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd" ID="P0b002ee1aba15483">
+<name type="corporate">
+ <namePart>United States Government Publishing Office</namePart>
+ <role>
+  <roleTerm authority="marcrelator" type="text">publisher</roleTerm>
+  <roleTerm authority="marcrelator" type="code">pbl</roleTerm>
+</role>
+ <role>
+  <roleTerm authority="marcrelator" type="text">distributor</roleTerm>
+  <roleTerm authority="marcrelator" type="code">dst</roleTerm>
+</role>
+</name>
+<name type="corporate">
+ <namePart>United States</namePart>
+ <namePart>Congress</namePart>
+ <namePart>Senate</namePart>
+ <role>
+  <roleTerm authority="marcrelator" type="text">author</roleTerm>
+  <roleTerm authority="marcrelator" type="code">aut</roleTerm>
+</role>
+ <description>Government Organization</description>
+</name>
+<typeOfResource>text</typeOfResource>
+<genre authority="marcgt">government publication</genre>
+<language>
+ <languageTerm type="code" authority="iso639-2b">eng</languageTerm>
+</language>
+<extension>
+ <collectionCode>BILLS</collectionCode>
+ <searchTitle>To establish the Environmental Justice Mapping Committee, and for other purposes.;Environmental Justice Mapping and Data Collection Act of 2021;S. 101 (IS)
+    </searchTitle>
+ <category>Bills and Statutes</category>
+ <waisDatabaseName>117_cong_bills</waisDatabaseName>
+ <branch>legislative</branch>
+ <dateIngested>2021-02-23</dateIngested>
+</extension>
+<titleInfo>
+ <title>To establish the Environmental Justice Mapping Committee, and for other purposes.</title>
+</titleInfo>
+<titleInfo type="alternative">
+ <title>Environmental Justice Mapping and Data Collection Act of 2021</title>
+</titleInfo>
+<titleInfo type="alternative">
+ <title>S. 101 (IS)
+    </title>
+</titleInfo>
+<originInfo>
+ <publisher>U.S. Government Publishing Office</publisher>
+ <dateIssued encoding="w3cdtf">2021-01-28</dateIssued>
+ <issuance>monographic</issuance>
+</originInfo>
+<physicalDescription>
+ <note type="source content type">deposited</note>
+ <digitalOrigin>born digital</digitalOrigin>
+ <extent>33 p.</extent>
+</physicalDescription>
+<classification authority="sudocs">Y 1.6:</classification>
+<classification authority="sudocs">Y 1.4/1:</classification>
+<identifier type="local">P0b002ee1aba15483</identifier>
+<identifier type="uri">https://www.govinfo.gov/app/details/BILLS-117s101is</identifier>
+<identifier type="preferred citation">S. 101</identifier>
+<identifier type="stock number">021-610-00252-9</identifier>
+<identifier type="Parent ILS system id">000501532</identifier>
+<identifier type="Child ILS system id">000325576</identifier>
+<identifier type="Parent ILS title">Congressional bills</identifier>
+<identifier type="Child ILS title">Senate bills</identifier>
+<identifier type="former package identifier">f:s101_is.txt</identifier>
+<location>
+ <url displayLabel="Content Detail" access="object in context">https://www.govinfo.gov/app/details/BILLS-117s101is</url>
+ <url displayLabel="HTML rendition" access="raw object">https://www.govinfo.gov/content/pkg/BILLS-117s101is/html/BILLS-117s101is.htm</url>
+ <url displayLabel="PDF rendition" access="raw object">https://www.govinfo.gov/content/pkg/BILLS-117s101is/pdf/BILLS-117s101is.pdf</url>
+ <url displayLabel="XML rendition" access="raw object">https://www.govinfo.gov/content/pkg/BILLS-117s101is/xml/BILLS-117s101is.xml</url>
+</location>
+<accessCondition type="GPO scope determination">fdlp</accessCondition>
+<recordInfo>
+ <recordContentSource authority="marcorg">DGPO</recordContentSource>
+ <recordCreationDate encoding="w3cdtf">2021-02-23</recordCreationDate>
+ <recordChangeDate encoding="w3cdtf">2021-02-23</recordChangeDate>
+ <recordIdentifier source="DGPO">BILLS-117s101is</recordIdentifier>
+ <recordOrigin>machine generated</recordOrigin>
+ <languageOfCataloging>
+  <languageTerm type="code" authority="iso639-2b">eng</languageTerm>
+</languageOfCataloging>
+</recordInfo>
+<name type="personal">
+ <namePart>Edward J. Markey</namePart>
+ <affiliation>United States Senate</affiliation>
+ <role>
+  <roleTerm authority="marcrelator" type="text">sponsor</roleTerm>
+  <roleTerm authority="marcrelator" type="code">spn</roleTerm>
+</role>
+ <description>United States Congress Member</description>
+</name>
+<name type="personal">
+ <namePart>Tammy Duckworth</namePart>
+ <affiliation>United States Senate</affiliation>
+ <role>
+  <roleTerm type="text">cosponsor</roleTerm>
+</role>
+ <description>United States Congress Member</description>
+</name>
+<name type="corporate">
+ <namePart>United States</namePart>
+ <namePart>Congress</namePart>
+ <namePart>Senate</namePart>
+ <namePart>Committee on Environment and Public Works</namePart>
+ <role>
+  <roleTerm authority="marcrelator" type="text">associated name</roleTerm>
+  <roleTerm authority="marcrelator" type="code">asn</roleTerm>
+</role>
+</name>
+<relatedItem type="isReferencedBy">
+ <titleInfo>
+  <title>United States Code</title>
+  <partNumber>Title 42 Section 4321note</partNumber>
+  <partNumber>Title 42 Section 9605(a)(8)(B)</partNumber>
+</titleInfo>
+ <identifier type="USC citation">42 U.S.C. 4321note</identifier>
+ <identifier type="USC citation">42 U.S.C. 9605(a)(8)(B)</identifier>
+</relatedItem>
+<extension>
+ <docClass>s</docClass>
+ <accessId>BILLS-117s101is</accessId>
+ <congress>117</congress>
+ <session>1</session>
+ <originChamber>SENATE</originChamber>
+ <currentChamber>SENATE</currentChamber>
+ <billNumber>101</billNumber>
+ <billVersion reprint="false">is</billVersion>
+ <fileSuffix>is</fileSuffix>
+ <shortTitle type="measure">Environmental Justice Mapping and Data Collection Act of 2021</shortTitle>
+ <officialTitle>To establish the Environmental Justice Mapping Committee, and for other purposes.</officialTitle>
+ <action date="2021-01-28">Mr. Markey (for himself and Ms. Duckworth) introduced the following bill; which was read twice and referred to the Committee on Environment and Public Works</action>
+ <congCommittee authorityId="ssev00" chamber="S" congress="117" type="S">
+                      <name type="authority-standard">Committee on Environment and Public Works</name>
+                      <name type="authority-short">Environment and Public Works</name>
+                </congCommittee>
+ <congMember authorityId="735" bioGuideId="M000133" chamber="S" congress="117" gpoId="7972" party="D" role="SPONSOR" state="MA">
+                      <name type="parsed">Mr. Markey</name>
+                      <name type="authority-fnf">Edward J. Markey</name>
+                      <name type="authority-lnf">Markey, Edward J.</name>
+                      <name type="authority-other">Edward Markey</name>
+                </congMember>
+ <congMember authorityId="2123" bioGuideId="D000622" chamber="S" congress="117" party="D" role="COSPONSOR" state="IL">
+                      <name type="parsed">Ms. Duckworth</name>
+                      <name type="authority-fnf">Tammy Duckworth</name>
+                      <name type="authority-lnf">Duckworth, Tammy</name>
+                </congMember>
+ <isPrivate>false</isPrivate>
+ <isAppropriation>false</isAppropriation>
+ <USCode title="42">
+                      <section detail="note" number="4321"></section>
+                      <section detail="(a)(8)(B)" number="9605"></section>
+                </USCode>
+</extension>
+</mods>

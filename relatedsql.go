@@ -2,12 +2,12 @@ package billtitles
 
 import (
 	"encoding/json"
-	"errors"
 	"io/fs"
 	stdlog "log"
 	"os"
 	"path/filepath"
 	"regexp"
+	"strings"
 	"sync"
 	"time"
 
@@ -21,10 +21,12 @@ const BILLSRELATED_DB = "billsrelated.db"
 
 type BillToBill struct {
 	gorm.Model
-	Billnumber    string `gorm:"index:,not null" json:"billnumber"`
-	Billnumber_to string `gorm:"index:,not null" json:"billnumber_to"`
-	Reason        string `gorm:"not null" json:"reason"`
-	Identified_by string `gorm:"index:,not null" json:"identified_by"`
+	Billnumber    string  `gorm:"index:,not null" json:"billnumber"`
+	Billnumber_to string  `gorm:"index:,not null" json:"billnumber_to"`
+	Reason        string  `gorm:"not null" json:"reason"`
+	Score         float64 `json:"score"`
+	ScoreOther    float64 `json:"score_other"` // score for other bill
+	Identified_by string  `gorm:"index:,not null" json:"identified_by"`
 }
 
 type compareItem struct {
@@ -57,9 +59,9 @@ func walkDirFilter(root string, testPath filterFunc) (filePaths []string, err er
 	return
 }
 
-func GetRelatedDb(dbname string) *gorm.DB {
+func getRelatedDb(dbname string) *gorm.DB {
 	if dbname == "" {
-		dbname = BILLTITLES_DB
+		dbname = BILLSRELATED_DB
 	}
 	var newLogger = logger.New(
 		stdlog.New(os.Stdout, "\r\n", stdlog.LstdFlags), // io writer
@@ -80,27 +82,7 @@ func GetRelatedDb(dbname string) *gorm.DB {
 	return db
 }
 
-func LoadRelatedMap(jsonPath string) (*sync.Map, error) {
-	relatedMap := new(sync.Map)
-	if _, err := os.Stat(jsonPath); os.IsNotExist(err) {
-		jsonPath = TitlesPath
-		if _, err := os.Stat(jsonPath); os.IsNotExist(err) {
-			return relatedMap, errors.New("related bills file file not found")
-		}
-	}
-	log.Debug().Msgf("Path to JSON file: %s", jsonPath)
-	var err error
-	relatedMap, err = UnmarshalJsonFile(jsonPath)
-	if err != nil {
-		return nil, err
-	} else {
-		return relatedMap, nil
-	}
-}
-
-//TODO create related sync.Map from individual json files
-
-var similarCategoryJsonFilter = func(testPath string) bool {
+func similarCategoryJsonFilter(testPath string) bool {
 	matched, err := regexp.MatchString(`esSimilarCategory`, testPath)
 	matchedJson, err2 := regexp.MatchString(`\.json$`, testPath)
 	if err != nil || err2 != nil {
@@ -112,6 +94,7 @@ var similarCategoryJsonFilter = func(testPath string) bool {
 func processRelatedJson(filePath string, similarityChannel chan compareItem, sem chan bool, wg *sync.WaitGroup) error {
 	defer func() {
 		log.Info().Msgf("Finished processing: %s\n", filePath)
+		wg.Done()
 		<-sem
 	}()
 	file, err := os.ReadFile(filePath)
@@ -121,8 +104,8 @@ func processRelatedJson(filePath string, similarityChannel chan compareItem, sem
 	}
 	var dat compareItem
 	_ = json.Unmarshal([]byte(file), &dat)
-
-	// TODO: handle dat and put it into the channel
+	similarityChannel <- dat
+	return nil
 }
 
 // jsonPath := RelatedJsonPath
@@ -148,15 +131,27 @@ func LoadBillsRelatedToDBFromJson(db *gorm.DB, parentPath string) {
 		for range dataJsonFiles {
 			compare := <-similarityChannel
 			log.Debug().Msgf("Got compare item from Channel: %v\n", compare)
-			// TODO: insert into db
+			bills := strings.Split(compare.ComparedDocs, "-")
+			if len(bills) != 2 {
+				log.Error().Msgf("Error parsing bills: %s", compare.ComparedDocs)
+				continue
+			}
+
+			// Create a billtobill item from compare and insert into db
+			billtobill := BillToBill{
+				Billnumber:    bills[0],
+				Billnumber_to: bills[1],
+				Reason:        compare.Explanation,
+				Score:         compare.Score,
+				ScoreOther:    compare.ScoreOther,
+				Identified_by: "BillMap",
+			}
+			db.Create(&billtobill)
 		}
 	}()
 
 	for _, jpath := range dataJsonFiles {
 		sem <- true
 		go processRelatedJson(jpath, similarityChannel, sem, wg)
-	}
-	for i := 0; i < cap(sem); i++ {
-		sem <- true
 	}
 }

@@ -1,0 +1,92 @@
+{
+ "116hr529": {
+  "Score": 0.94,
+  "ScoreOther": 0.95,
+  "Explanation": "bills-nearly_identical",
+  "ComparedDocs": "117hr200-116hr529"
+ },
+ "116hr5745": {
+  "Score": 0.02,
+  "ScoreOther": 0.17,
+  "Explanation": "bills-some_similarity",
+  "ComparedDocs": "117hr200-116hr5745"
+ },
+ "116hr6104": {
+  "Score": 0.04,
+  "ScoreOther": 0.1,
+  "Explanation": "bills-some_similarity",
+  "ComparedDocs": "117hr200-116hr6104"
+ },
+ "116hr6224": {
+  "Score": 0.02,
+  "ScoreOther": 0.13,
+  "Explanation": "bills-some_similarity",
+  "ComparedDocs": "117hr200-116hr6224"
+ },
+ "116hr7869": {
+  "Score": 0.67,
+  "ScoreOther": 0.66,
+  "Explanation": "bills-some_similarity",
+  "ComparedDocs": "117hr200-116hr7869"
+ },
+ "116s2310": {
+  "Score": 0.01,
+  "ScoreOther": 0.13,
+  "Explanation": "bills-some_similarity",
+  "ComparedDocs": "117hr200-116s2310"
+ },
+ "117hr1993": {
+  "Score": 0.04,
+  "ScoreOther": 0.11,
+  "Explanation": "bills-some_similarity",
+  "ComparedDocs": "117hr200-117hr1993"
+ },
+ "117hr200": {
+  "Score": 1,
+  "ScoreOther": 1,
+  "Explanation": "bills-identical",
+  "ComparedDocs": "117hr200-117hr200"
+ },
+ "117hr201": {
+  "Score": 0.71,
+  "ScoreOther": 0.69,
+  "Explanation": "bills-some_similarity",
+  "ComparedDocs": "117hr200-117hr201"
+ },
+ "117hr2187": {
+  "Score": 0.06,
+  "ScoreOther": 0.13,
+  "Explanation": "bills-some_similarity",
+  "ComparedDocs": "117hr200-117hr2187"
+ },
+ "117hr2481": {
+  "Score": 0.09,
+  "ScoreOther": 0.12,
+  "Explanation": "bills-some_similarity",
+  "ComparedDocs": "117hr200-117hr2481"
+ },
+ "117hr3701": {
+  "Score": 0.02,
+  "ScoreOther": 0.13,
+  "Explanation": "bills-some_similarity",
+  "ComparedDocs": "117hr200-117hr3701"
+ },
+ "117hr4542": {
+  "Score": 0.04,
+  "ScoreOther": 0.11,
+  "Explanation": "bills-some_similarity",
+  "ComparedDocs": "117hr200-117hr4542"
+ },
+ "117s1465": {
+  "Score": 0.04,
+  "ScoreOther": 0.1,
+  "Explanation": "bills-some_similarity",
+  "ComparedDocs": "117hr200-117s1465"
+ },
+ "117s1817": {
+  "Score": 0.01,
+  "ScoreOther": 0.14,
+  "Explanation": "bills-some_similarity",
+  "ComparedDocs": "117hr200-117s1817"
+ }
+}

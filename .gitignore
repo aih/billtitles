@@ -5,6 +5,8 @@
 *.so
 *.dylib
 
+*.zip
+
 # Sqlite files (unless we decide to save them)
 *.db
 

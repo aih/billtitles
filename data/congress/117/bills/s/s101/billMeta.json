@@ -1,0 +1,144 @@
+{
+ "actions": [
+  {
+   "acted_at": "2021-01-28",
+   "action_code": "10000",
+   "references": [],
+   "text": "Introduced in Senate",
+   "type": "action"
+  },
+  {
+   "acted_at": "2021-01-28",
+   "action_code": "",
+   "references": [],
+   "text": "Read twice and referred to the Committee on Environment and Public Works.",
+   "type": "referral"
+  }
+ ],
+ "congress": "117",
+ "bill_type": "s",
+ "number": "101",
+ "bill_congress_type_number": "117s101",
+ "history": {
+  "active": false,
+  "awaiting_signature": false,
+  "enacted": false,
+  "vetoed": false
+ },
+ "official_title": "",
+ "popular_title": "",
+ "short_title": "Environmental Justice Mapping and Data Collection Act of 2021",
+ "titles": [
+  "Environmental Justice Mapping and Data Collection Act of 2021",
+  "A bill to establish the Environmental Justice Mapping Committee, and for other purposes."
+ ],
+ "titles_whole_bill": [
+  "Environmental Justice Mapping and Data Collection Act of 2021",
+  "A bill to establish the Environmental Justice Mapping Committee, and for other purposes."
+ ],
+ "cosponsors": [
+  {
+   "bioguide_id": "B001230",
+   "thomas_id": "",
+   "district": "",
+   "name": "Baldwin, Tammy",
+   "original_cosponsor": false,
+   "sponsored_at": "2021-05-24",
+   "state": "WI",
+   "title": "Sen."
+  },
+  {
+   "bioguide_id": "B001277",
+   "thomas_id": "",
+   "district": "",
+   "name": "Blumenthal, Richard",
+   "original_cosponsor": false,
+   "sponsored_at": "2021-04-28",
+   "state": "CT",
+   "title": "Sen."
+  },
+  {
+   "bioguide_id": "D000622",
+   "thomas_id": "",
+   "district": "",
+   "name": "Duckworth, Tammy",
+   "original_cosponsor": true,
+   "sponsored_at": "2021-01-28",
+   "state": "IL",
+   "title": "Sen."
+  },
+  {
+   "bioguide_id": "D000563",
+   "thomas_id": "",
+   "district": "",
+   "name": "Durbin, Richard J.",
+   "original_cosponsor": false,
+   "sponsored_at": "2021-03-25",
+   "state": "IL",
+   "title": "Sen."
+  },
+  {
+   "bioguide_id": "P000145",
+   "thomas_id": "",
+   "district": "",
+   "name": "Padilla, Alex",
+   "original_cosponsor": false,
+   "sponsored_at": "2021-04-15",
+   "state": "CA",
+   "title": "Sen."
+  },
+  {
+   "bioguide_id": "S001203",
+   "thomas_id": "",
+   "district": "",
+   "name": "Smith, Tina",
+   "original_cosponsor": false,
+   "sponsored_at": "2021-04-20",
+   "state": "MN",
+   "title": "Sen."
+  },
+  {
+   "bioguide_id": "W000817",
+   "thomas_id": "",
+   "district": "",
+   "name": "Warren, Elizabeth",
+   "original_cosponsor": false,
+   "sponsored_at": "2021-04-15",
+   "state": "MA",
+   "title": "Sen."
+  }
+ ],
+ "committees": [
+  {
+   "activity": [
+    "referral"
+   ],
+   "committee": "Senate Environment and Public Works",
+   "committee_id": "SSEV",
+   "subcommittee": "",
+   "subcomittee_id": ""
+  }
+ ],
+ "related_bills": [
+  {
+   "bill_id": "hr516-117",
+   "identified_by": "CRS",
+   "reason": "identical",
+   "type": "bill",
+   "bill_congress_type_number": "117hr516",
+   "titles": null,
+   "titles_whole_bill": null
+  }
+ ],
+ "related_dict": {
+  "117hr516": {
+   "bill_id": "hr516-117",
+   "identified_by": "CRS",
+   "reason": "identical",
+   "type": "bill",
+   "bill_congress_type_number": "",
+   "titles": null,
+   "titles_whole_bill": null
+  }
+ }
+}

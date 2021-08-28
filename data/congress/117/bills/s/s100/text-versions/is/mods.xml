@@ -1,0 +1,158 @@
+<mods xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.loc.gov/mods/v3" version="3.3" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd" ID="P0b002ee1aba15459">
+<name type="corporate">
+ <namePart>United States Government Publishing Office</namePart>
+ <role>
+  <roleTerm authority="marcrelator" type="text">publisher</roleTerm>
+  <roleTerm authority="marcrelator" type="code">pbl</roleTerm>
+</role>
+ <role>
+  <roleTerm authority="marcrelator" type="text">distributor</roleTerm>
+  <roleTerm authority="marcrelator" type="code">dst</roleTerm>
+</role>
+</name>
+<name type="corporate">
+ <namePart>United States</namePart>
+ <namePart>Congress</namePart>
+ <namePart>Senate</namePart>
+ <role>
+  <roleTerm authority="marcrelator" type="text">author</roleTerm>
+  <roleTerm authority="marcrelator" type="code">aut</roleTerm>
+</role>
+ <description>Government Organization</description>
+</name>
+<typeOfResource>text</typeOfResource>
+<genre authority="marcgt">government publication</genre>
+<language>
+ <languageTerm type="code" authority="iso639-2b">eng</languageTerm>
+</language>
+<extension>
+ <collectionCode>BILLS</collectionCode>
+ <searchTitle>To provide guidance and priorities for Federal Government obligations in the event that the debt limit is reached and to provide a limited and temporary authority to exceed the debt limit for priority obligations.;Default Prevention Act;S. 100 (IS)
+    </searchTitle>
+ <category>Bills and Statutes</category>
+ <waisDatabaseName>117_cong_bills</waisDatabaseName>
+ <branch>legislative</branch>
+ <dateIngested>2021-02-23</dateIngested>
+</extension>
+<titleInfo>
+ <title>To provide guidance and priorities for Federal Government obligations in the event that the debt limit is reached and to provide a limited and temporary authority to exceed the debt limit for priority obligations.</title>
+</titleInfo>
+<titleInfo type="alternative">
+ <title>Default Prevention Act</title>
+</titleInfo>
+<titleInfo type="alternative">
+ <title>S. 100 (IS)
+    </title>
+</titleInfo>
+<originInfo>
+ <publisher>U.S. Government Publishing Office</publisher>
+ <dateIssued encoding="w3cdtf">2021-01-28</dateIssued>
+ <issuance>monographic</issuance>
+</originInfo>
+<physicalDescription>
+ <note type="source content type">deposited</note>
+ <digitalOrigin>born digital</digitalOrigin>
+ <extent>4 p.</extent>
+</physicalDescription>
+<classification authority="sudocs">Y 1.6:</classification>
+<classification authority="sudocs">Y 1.4/1:</classification>
+<identifier type="local">P0b002ee1aba15459</identifier>
+<identifier type="uri">https://www.govinfo.gov/app/details/BILLS-117s100is</identifier>
+<identifier type="preferred citation">S. 100</identifier>
+<identifier type="stock number">021-610-00252-9</identifier>
+<identifier type="Parent ILS system id">000501532</identifier>
+<identifier type="Child ILS system id">000325576</identifier>
+<identifier type="Parent ILS title">Congressional bills</identifier>
+<identifier type="Child ILS title">Senate bills</identifier>
+<identifier type="former package identifier">f:s100_is.txt</identifier>
+<location>
+ <url displayLabel="Content Detail" access="object in context">https://www.govinfo.gov/app/details/BILLS-117s100is</url>
+ <url displayLabel="HTML rendition" access="raw object">https://www.govinfo.gov/content/pkg/BILLS-117s100is/html/BILLS-117s100is.htm</url>
+ <url displayLabel="PDF rendition" access="raw object">https://www.govinfo.gov/content/pkg/BILLS-117s100is/pdf/BILLS-117s100is.pdf</url>
+ <url displayLabel="XML rendition" access="raw object">https://www.govinfo.gov/content/pkg/BILLS-117s100is/xml/BILLS-117s100is.xml</url>
+</location>
+<accessCondition type="GPO scope determination">fdlp</accessCondition>
+<recordInfo>
+ <recordContentSource authority="marcorg">DGPO</recordContentSource>
+ <recordCreationDate encoding="w3cdtf">2021-02-23</recordCreationDate>
+ <recordChangeDate encoding="w3cdtf">2021-02-23</recordChangeDate>
+ <recordIdentifier source="DGPO">BILLS-117s100is</recordIdentifier>
+ <recordOrigin>machine generated</recordOrigin>
+ <languageOfCataloging>
+  <languageTerm type="code" authority="iso639-2b">eng</languageTerm>
+</languageOfCataloging>
+</recordInfo>
+<name type="personal">
+ <namePart>Rand Paul</namePart>
+ <affiliation>United States Senate</affiliation>
+ <role>
+  <roleTerm authority="marcrelator" type="text">sponsor</roleTerm>
+  <roleTerm authority="marcrelator" type="code">spn</roleTerm>
+</role>
+ <description>United States Congress Member</description>
+</name>
+<name type="corporate">
+ <namePart>United States</namePart>
+ <namePart>Congress</namePart>
+ <namePart>Senate</namePart>
+ <namePart>Committee on Finance</namePart>
+ <role>
+  <roleTerm authority="marcrelator" type="text">associated name</roleTerm>
+  <roleTerm authority="marcrelator" type="code">asn</roleTerm>
+</role>
+</name>
+<relatedItem type="isReferencedBy">
+ <titleInfo>
+  <title>United States Code</title>
+  <partNumber>Title 5 Section 8348</partNumber>
+  <partNumber>Title 5 Section 8438</partNumber>
+</titleInfo>
+ <identifier type="USC citation">5 U.S.C. 8348</identifier>
+ <identifier type="USC citation">5 U.S.C. 8438</identifier>
+</relatedItem>
+<relatedItem type="isReferencedBy">
+ <titleInfo>
+  <title>United States Code</title>
+  <partNumber>Title 31 Section 3101</partNumber>
+  <partNumber>Title 31 Section 3123</partNumber>
+  <partNumber>Title 31 Section 5302(a)(1)</partNumber>
+</titleInfo>
+ <identifier type="USC citation">31 U.S.C. 3101</identifier>
+ <identifier type="USC citation">31 U.S.C. 3123</identifier>
+ <identifier type="USC citation">31 U.S.C. 5302(a)(1)</identifier>
+</relatedItem>
+<extension>
+ <docClass>s</docClass>
+ <accessId>BILLS-117s100is</accessId>
+ <congress>117</congress>
+ <session>1</session>
+ <originChamber>SENATE</originChamber>
+ <currentChamber>SENATE</currentChamber>
+ <billNumber>100</billNumber>
+ <billVersion reprint="false">is</billVersion>
+ <fileSuffix>is</fileSuffix>
+ <shortTitle type="measure">Default Prevention Act</shortTitle>
+ <officialTitle>To provide guidance and priorities for Federal Government obligations in the event that the debt limit is reached and to provide a limited and temporary authority to exceed the debt limit for priority obligations.</officialTitle>
+ <action date="2021-01-28">Mr. Paul introduced the following bill; which was read twice and referred to the Committee on Finance</action>
+ <congCommittee authorityId="ssfi00" chamber="S" congress="117" type="S">
+                      <name type="authority-standard">Committee on Finance</name>
+                      <name type="authority-short">Finance</name>
+                </congCommittee>
+ <congMember authorityId="2082" bioGuideId="P000603" chamber="S" congress="117" gpoId="8308" party="R" role="SPONSOR" state="KY">
+                      <name type="parsed">Mr. Paul</name>
+                      <name type="authority-fnf">Rand Paul</name>
+                      <name type="authority-lnf">Paul, Rand</name>
+                </congMember>
+ <isPrivate>false</isPrivate>
+ <isAppropriation>false</isAppropriation>
+ <USCode title="5">
+                      <section number="8348"></section>
+                      <section number="8438"></section>
+                </USCode>
+ <USCode title="31">
+                      <section number="3101"></section>
+                      <section number="3123"></section>
+                      <section detail="(a)(1)" number="5302"></section>
+                </USCode>
+</extension>
+</mods>

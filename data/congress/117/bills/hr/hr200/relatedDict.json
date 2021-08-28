@@ -1,0 +1,62 @@
+{
+ "114hr1606": {
+  "bill_id": "hr1606-114",
+  "identified_by": "BillMap",
+  "reason": "bills-title_match_main, bills-title_match",
+  "type": "",
+  "bill_congress_type_number": "114hr1606",
+  "titles": [
+   "To direct the Secretary of Transportation to establish a national intersection and interchange safety construction program, and for other purposes.",
+   "National Intersection and Interchange Safety Construction Program Act"
+  ],
+  "titles_whole_bill": [
+   "National Intersection and Interchange Safety Construction Program Act",
+   "To direct the Secretary of Transportation to establish a national intersection and interchange safety construction program, and for other purposes."
+  ]
+ },
+ "115hr2529": {
+  "bill_id": "hr2529-115",
+  "identified_by": "BillMap",
+  "reason": "bills-title_match_main, bills-title_match",
+  "type": "",
+  "bill_congress_type_number": "115hr2529",
+  "titles": [
+   "To direct the Secretary of Transportation to establish a national intersection and interchange safety construction program, and for other purposes.",
+   "National Intersection and Interchange Safety Construction Program Act"
+  ],
+  "titles_whole_bill": [
+   "National Intersection and Interchange Safety Construction Program Act",
+   "To direct the Secretary of Transportation to establish a national intersection and interchange safety construction program, and for other purposes."
+  ]
+ },
+ "116hr529": {
+  "bill_id": "hr529-116",
+  "identified_by": "BillMap",
+  "reason": "bills-title_match_main, bills-title_match",
+  "type": "",
+  "bill_congress_type_number": "116hr529",
+  "titles": [
+   "To direct the Secretary of Transportation to establish a national intersection and interchange safety construction program, and for other purposes.",
+   "National Intersection and Interchange Safety Construction Program Act"
+  ],
+  "titles_whole_bill": [
+   "National Intersection and Interchange Safety Construction Program Act",
+   "To direct the Secretary of Transportation to establish a national intersection and interchange safety construction program, and for other purposes."
+  ]
+ },
+ "117hr200": {
+  "bill_id": "hr200-117",
+  "identified_by": "BillMap",
+  "reason": "bills-title_match_main, bills-title_match",
+  "type": "",
+  "bill_congress_type_number": "117hr200",
+  "titles": [
+   "To direct the Secretary of Transportation to establish a national intersection and interchange safety construction program, and for other purposes.",
+   "National Intersection and Interchange Safety Construction Program Act"
+  ],
+  "titles_whole_bill": [
+   "National Intersection and Interchange Safety Construction Program Act",
+   "To direct the Secretary of Transportation to establish a national intersection and interchange safety construction program, and for other purposes."
+  ]
+ }
+}

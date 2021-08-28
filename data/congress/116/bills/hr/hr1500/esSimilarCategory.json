@@ -1,0 +1,92 @@
+{
+ "116hr1500": {
+  "Score": 1,
+  "ScoreOther": 1,
+  "Explanation": "bills-identical",
+  "ComparedDocs": "116hr1500-116hr1500"
+ },
+ "116hr3547": {
+  "Score": 0.16,
+  "ScoreOther": 0.02,
+  "Explanation": "bills-some_similarity",
+  "ComparedDocs": "116hr1500-116hr3547"
+ },
+ "116hr4596": {
+  "Score": 0.02,
+  "ScoreOther": 0.01,
+  "Explanation": "bills-unrelated",
+  "ComparedDocs": "116hr1500-116hr4596"
+ },
+ "116hr4841": {
+  "Score": 0.09,
+  "ScoreOther": 0.01,
+  "Explanation": "bills-unrelated",
+  "ComparedDocs": "116hr1500-116hr4841"
+ },
+ "116hr4966": {
+  "Score": 0.05,
+  "ScoreOther": 0.01,
+  "Explanation": "bills-unrelated",
+  "ComparedDocs": "116hr1500-116hr4966"
+ },
+ "116hr5021": {
+  "Score": 0.38,
+  "ScoreOther": 0.02,
+  "Explanation": "bills-some_similarity",
+  "ComparedDocs": "116hr1500-116hr5021"
+ },
+ "116hr5050": {
+  "Score": 0.08,
+  "ScoreOther": 0.01,
+  "Explanation": "bills-unrelated",
+  "ComparedDocs": "116hr1500-116hr5050"
+ },
+ "116hr6735": {
+  "Score": 0.17,
+  "ScoreOther": 0.01,
+  "Explanation": "bills-some_similarity",
+  "ComparedDocs": "116hr1500-116hr6735"
+ },
+ "116hres77": {
+  "Score": 0.04,
+  "ScoreOther": 0,
+  "Explanation": "bills-unrelated",
+  "ComparedDocs": "116hr1500-116hres77"
+ },
+ "116s2833": {
+  "Score": 0.09,
+  "ScoreOther": 0.01,
+  "Explanation": "bills-unrelated",
+  "ComparedDocs": "116hr1500-116s2833"
+ },
+ "116s4471": {
+  "Score": 0.05,
+  "ScoreOther": 0,
+  "Explanation": "bills-unrelated",
+  "ComparedDocs": "116hr1500-116s4471"
+ },
+ "117hr1657": {
+  "Score": 0.37,
+  "ScoreOther": 0.02,
+  "Explanation": "bills-some_similarity",
+  "ComparedDocs": "116hr1500-117hr1657"
+ },
+ "117hr2959": {
+  "Score": 0.16,
+  "ScoreOther": 0.01,
+  "Explanation": "bills-some_similarity",
+  "ComparedDocs": "116hr1500-117hr2959"
+ },
+ "117hr4590": {
+  "Score": 0.1,
+  "ScoreOther": 0.01,
+  "Explanation": "bills-some_similarity",
+  "ComparedDocs": "116hr1500-117hr4590"
+ },
+ "117s2508": {
+  "Score": 0.08,
+  "ScoreOther": 0.01,
+  "Explanation": "bills-unrelated",
+  "ComparedDocs": "116hr1500-117s2508"
+ }
+}

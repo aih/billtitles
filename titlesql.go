@@ -25,6 +25,13 @@ type Bill struct {
 	TitlesWhole       []*Title `gorm:"many2many:bill_titleswhole" json:"titles_whole"`
 }
 
+type BillTitle struct {
+	gorm.Model
+	Billnumber     string `gorm:"index:,not null" json:"billnumber"`
+	Title          string `gorm:"index:,not null" json:"title"`
+	IsForWholeBill bool   `gorm:"not null" json:"is_for_whole_bill"`
+}
+
 const BILLTITLES_DB = "billtitles.db"
 
 func BillNumberVersionToBillNumber(billNumberVersion string) string {
@@ -40,17 +47,17 @@ func BillNumberVersionsToBillNumbers(billNumberVersions []string) (billNumbers [
 	return billNumbers
 }
 
-func GetDb(dbname string) *gorm.DB {
+func GetDb_old(dbname string) *gorm.DB {
 	if dbname == "" {
 		dbname = BILLTITLES_DB
 	}
 	var newLogger = logger.New(
 		stdlog.New(os.Stdout, "\r\n", stdlog.LstdFlags), // io writer
 		logger.Config{
-			SlowThreshold:             time.Second, // Slow SQL threshold
-			LogLevel:                  logger.Warn, // Log level
-			IgnoreRecordNotFoundError: true,        // Ignore ErrRecordNotFound error for logger
-			Colorful:                  false,       // Disable color
+			SlowThreshold:             time.Second,   // Slow SQL threshold
+			LogLevel:                  logger.Silent, // Log level
+			IgnoreRecordNotFoundError: true,          // Ignore ErrRecordNotFound error for logger
+			Colorful:                  false,         // Disable color
 		},
 	)
 	var db, _ = gorm.Open(sqlite.Open(dbname), &gorm.Config{
@@ -60,6 +67,28 @@ func GetDb(dbname string) *gorm.DB {
 	// when updating a title or bill.
 	db.AutoMigrate(&Bill{}, &Title{})
 	db.Session(&gorm.Session{FullSaveAssociations: true})
+	return db
+}
+
+func GetDb(dbname string) *gorm.DB {
+	if dbname == "" {
+		dbname = BILLTITLES_DB
+	}
+	var newLogger = logger.New(
+		stdlog.New(os.Stdout, "\r\n", stdlog.LstdFlags), // io writer
+		logger.Config{
+			SlowThreshold:             time.Second,   // Slow SQL threshold
+			LogLevel:                  logger.Silent, // Log level
+			IgnoreRecordNotFoundError: true,          // Ignore ErrRecordNotFound error for logger
+			Colorful:                  false,         // Disable color
+		},
+	)
+	var db, _ = gorm.Open(sqlite.Open(dbname), &gorm.Config{
+		Logger: newLogger,
+	})
+
+	db.AutoMigrate(&BillTitle{})
+	//db.Session(&gorm.Session{FullSaveAssociations: true})
 	return db
 }
 
@@ -195,7 +224,7 @@ func LoadTitlesToDBFromJson(db *gorm.DB, jsonPath string) {
 	titleMap.Range(func(key, value interface{}) bool {
 		billnumbers := value.([]string)
 		if len(billnumbers) > 0 {
-			log.Info().Msgf("Adding billnumbers %+v to title `%s`", billnumbers, key)
+			log.Debug().Msgf("Adding billnumbers %+v to title `%s`", billnumbers, key)
 			bills := []*Bill{}
 			for _, billnumber := range billnumbers {
 				billnumberversion := billnumber + "ih"
@@ -203,6 +232,27 @@ func LoadTitlesToDBFromJson(db *gorm.DB, jsonPath string) {
 			}
 			title := Title{Title: key.(string), Bills: bills}
 			db.Create(&title)
+
+		}
+		return true
+	})
+}
+
+func LoadBillTitleToDBFromJson(db *gorm.DB, jsonPath string, isForWhole bool) {
+	log.Info().Msgf("Loading titles to database from json file: %s", jsonPath)
+	titleMap, error := LoadTitlesMap(jsonPath)
+	if error != nil {
+		log.Fatal().Msgf("Error loading titles: %s", error)
+	}
+	titleMap.Range(func(key, value interface{}) bool {
+		title := key.(string)
+		billnumbers := value.([]string)
+		if len(billnumbers) > 0 {
+			log.Debug().Msgf("Adding billnumbers %+v to title `%s`", billnumbers, key)
+			for _, billnumber := range billnumbers {
+				billTitle := BillTitle{Billnumber: billnumber, Title: title, IsForWholeBill: isForWhole}
+				db.Create(&billTitle)
+			}
 
 		}
 		return true

@@ -1,0 +1,92 @@
+{
+ "116hr6692": {
+  "Score": 0.06,
+  "ScoreOther": 0.01,
+  "Explanation": "bills-unrelated",
+  "ComparedDocs": "117s101-116hr6692"
+ },
+ "116hres109": {
+  "Score": 0.01,
+  "ScoreOther": 0,
+  "Explanation": "bills-unrelated",
+  "ComparedDocs": "117s101-116hres109"
+ },
+ "116hres1102": {
+  "Score": 0.01,
+  "ScoreOther": 0,
+  "Explanation": "bills-unrelated",
+  "ComparedDocs": "117s101-116hres1102"
+ },
+ "116s3680": {
+  "Score": 0.11,
+  "ScoreOther": 0.01,
+  "Explanation": "bills-some_similarity",
+  "ComparedDocs": "117s101-116s3680"
+ },
+ "116sres59": {
+  "Score": 0.01,
+  "ScoreOther": 0.01,
+  "Explanation": "bills-unrelated",
+  "ComparedDocs": "117s101-116sres59"
+ },
+ "116sres693": {
+  "Score": 0.01,
+  "ScoreOther": 0.01,
+  "Explanation": "bills-unrelated",
+  "ComparedDocs": "117s101-116sres693"
+ },
+ "117hr2394": {
+  "Score": 0.03,
+  "ScoreOther": 0.01,
+  "Explanation": "bills-unrelated",
+  "ComparedDocs": "117s101-117hr2394"
+ },
+ "117hr516": {
+  "Score": 0.97,
+  "ScoreOther": 0.99,
+  "Explanation": "bills-nearly_identical",
+  "ComparedDocs": "117s101-117hr516"
+ },
+ "117hres104": {
+  "Score": 0.01,
+  "ScoreOther": 0.01,
+  "Explanation": "bills-unrelated",
+  "ComparedDocs": "117s101-117hres104"
+ },
+ "117hres332": {
+  "Score": 0.01,
+  "ScoreOther": 0.01,
+  "Explanation": "bills-unrelated",
+  "ComparedDocs": "117s101-117hres332"
+ },
+ "117hres457": {
+  "Score": 0.01,
+  "ScoreOther": 0.01,
+  "Explanation": "bills-unrelated",
+  "ComparedDocs": "117s101-117hres457"
+ },
+ "117s101": {
+  "Score": 1,
+  "ScoreOther": 1,
+  "Explanation": "bills-identical",
+  "ComparedDocs": "117s101-117s101"
+ },
+ "117s1347": {
+  "Score": 0.17,
+  "ScoreOther": 0.02,
+  "Explanation": "bills-some_similarity",
+  "ComparedDocs": "117s101-117s1347"
+ },
+ "117sres166": {
+  "Score": 0.02,
+  "ScoreOther": 0.01,
+  "Explanation": "bills-unrelated",
+  "ComparedDocs": "117s101-117sres166"
+ },
+ "117sres43": {
+  "Score": 0.01,
+  "ScoreOther": 0.01,
+  "Explanation": "bills-unrelated",
+  "ComparedDocs": "117s101-117sres43"
+ }
+}

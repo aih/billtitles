@@ -62,7 +62,7 @@ func UnmarshalTitlesJson(data []byte) (*sync.Map, error) {
 	return m, nil
 }
 
-func UnmarshalJsonFile(jpath string) (*sync.Map, error) {
+func UnmarshalTitlesJsonFile(jpath string) (*sync.Map, error) {
 	jsonFile, err := os.Open(jpath)
 	if err != nil {
 		log.Error().Err(err)
@@ -72,6 +72,34 @@ func UnmarshalJsonFile(jpath string) (*sync.Map, error) {
 
 	jsonByte, _ := ioutil.ReadAll(jsonFile)
 	return UnmarshalTitlesJson(jsonByte)
+}
+
+// Unmarshals from JSON to a syncMap
+// See https://stackoverflow.com/a/65442862/628748
+func UnmarshalJson(data []byte) (*sync.Map, error) {
+	var tmpMap map[interface{}]interface{}
+	m := &sync.Map{}
+
+	if err := json.Unmarshal(data, &tmpMap); err != nil {
+		return m, err
+	}
+
+	for key, value := range tmpMap {
+		m.Store(key, value)
+	}
+	return m, nil
+}
+
+func UnmarshalJsonFile(jpath string) (*sync.Map, error) {
+	jsonFile, err := os.Open(jpath)
+	if err != nil {
+		log.Error().Err(err)
+	}
+
+	defer jsonFile.Close()
+
+	jsonByte, _ := ioutil.ReadAll(jsonFile)
+	return UnmarshalJson(jsonByte)
 }
 
 // Gets keys of a sync.Map

@@ -1,0 +1,136 @@
+{
+ "113hr2775": {
+  "bill_id": "hr2775-113",
+  "identified_by": "BillMap",
+  "reason": "bills-title_match",
+  "type": "",
+  "bill_congress_type_number": "113hr2775",
+  "titles": [
+   "Default Prevention Act"
+  ],
+  "titles_whole_bill": null
+ },
+ "113hr3284": {
+  "bill_id": "hr3284-113",
+  "identified_by": "BillMap",
+  "reason": "bills-title_match_main, bills-title_match",
+  "type": "",
+  "bill_congress_type_number": "113hr3284",
+  "titles": [
+   "Default Prevention Act"
+  ],
+  "titles_whole_bill": [
+   "Default Prevention Act"
+  ]
+ },
+ "113s1569": {
+  "bill_id": "s1569-113",
+  "identified_by": "BillMap",
+  "reason": "bills-title_match_main, bills-title_match",
+  "type": "",
+  "bill_congress_type_number": "113s1569",
+  "titles": [
+   "Default Prevention Act"
+  ],
+  "titles_whole_bill": [
+   "Default Prevention Act"
+  ]
+ },
+ "113s81": {
+  "bill_id": "s81-113",
+  "identified_by": "BillMap",
+  "reason": "bills-title_match_main, bills-title_match",
+  "type": "",
+  "bill_congress_type_number": "113s81",
+  "titles": [
+   "Default Prevention Act"
+  ],
+  "titles_whole_bill": [
+   "Default Prevention Act"
+  ]
+ },
+ "114hr692": {
+  "bill_id": "hr692-114",
+  "identified_by": "BillMap",
+  "reason": "bills-title_match_main, bills-title_match",
+  "type": "",
+  "bill_congress_type_number": "114hr692",
+  "titles": [
+   "Default Prevention Act"
+  ],
+  "titles_whole_bill": [
+   "Default Prevention Act"
+  ]
+ },
+ "114s2181": {
+  "bill_id": "s2181-114",
+  "identified_by": "BillMap",
+  "reason": "bills-title_match_main, bills-title_match",
+  "type": "",
+  "bill_congress_type_number": "114s2181",
+  "titles": [
+   "Default Prevention Act"
+  ],
+  "titles_whole_bill": [
+   "Default Prevention Act"
+  ]
+ },
+ "115hr422": {
+  "bill_id": "hr422-115",
+  "identified_by": "BillMap",
+  "reason": "bills-title_match_main, bills-title_match",
+  "type": "",
+  "bill_congress_type_number": "115hr422",
+  "titles": [
+   "Default Prevention Act"
+  ],
+  "titles_whole_bill": [
+   "Default Prevention Act"
+  ]
+ },
+ "115s1740": {
+  "bill_id": "s1740-115",
+  "identified_by": "BillMap",
+  "reason": "bills-title_match_main, bills-title_match",
+  "type": "",
+  "bill_congress_type_number": "115s1740",
+  "titles": [
+   "A bill to provide guidance and priorities for Federal Government obligations in the event that the debt limit is reached and to provide a limited and temporary authority to exceed the debt limit for priority obligations.",
+   "Default Prevention Act"
+  ],
+  "titles_whole_bill": [
+   "Default Prevention Act",
+   "A bill to provide guidance and priorities for Federal Government obligations in the event that the debt limit is reached and to provide a limited and temporary authority to exceed the debt limit for priority obligations."
+  ]
+ },
+ "116s623": {
+  "bill_id": "s623-116",
+  "identified_by": "BillMap",
+  "reason": "bills-title_match_main, bills-title_match",
+  "type": "",
+  "bill_congress_type_number": "116s623",
+  "titles": [
+   "A bill to provide guidance and priorities for Federal Government obligations in the event that the debt limit is reached and to provide a limited and temporary authority to exceed the debt limit for priority obligations.",
+   "Default Prevention Act"
+  ],
+  "titles_whole_bill": [
+   "Default Prevention Act",
+   "A bill to provide guidance and priorities for Federal Government obligations in the event that the debt limit is reached and to provide a limited and temporary authority to exceed the debt limit for priority obligations."
+  ]
+ },
+ "117s100": {
+  "bill_id": "s100-117",
+  "identified_by": "BillMap",
+  "reason": "bills-title_match_main, bills-title_match",
+  "type": "",
+  "bill_congress_type_number": "117s100",
+  "titles": [
+   "A bill to provide guidance and priorities for Federal Government obligations in the event that the debt limit is reached and to provide a limited and temporary authority to exceed the debt limit for priority obligations.",
+   "Default Prevention Act"
+  ],
+  "titles_whole_bill": [
+   "Default Prevention Act",
+   "A bill to provide guidance and priorities for Federal Government obligations in the event that the debt limit is reached and to provide a limited and temporary authority to exceed the debt limit for priority obligations."
+  ]
+ }
+}

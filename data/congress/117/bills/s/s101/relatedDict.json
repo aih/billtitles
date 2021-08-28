@@ -1,0 +1,30 @@
+{
+ "117hr516": {
+  "bill_id": "hr516-117",
+  "identified_by": "CRS, BillMap",
+  "reason": "identical, bills-title_match_main, bills-title_match",
+  "type": "bill",
+  "bill_congress_type_number": "117hr516",
+  "titles": [
+   "Environmental Justice Mapping and Data Collection Act"
+  ],
+  "titles_whole_bill": [
+   "Environmental Justice Mapping and Data Collection Act"
+  ]
+ },
+ "117s101": {
+  "bill_id": "s101-117",
+  "identified_by": "BillMap",
+  "reason": "bills-title_match_main, bills-title_match",
+  "type": "",
+  "bill_congress_type_number": "117s101",
+  "titles": [
+   "A bill to establish the Environmental Justice Mapping Committee, and for other purposes.",
+   "Environmental Justice Mapping and Data Collection Act"
+  ],
+  "titles_whole_bill": [
+   "A bill to establish the Environmental Justice Mapping Committee, and for other purposes.",
+   "Environmental Justice Mapping and Data Collection Act"
+  ]
+ }
+}

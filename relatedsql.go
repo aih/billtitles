@@ -1,9 +1,13 @@
 package billtitles
 
 import (
+	"encoding/json"
 	"errors"
+	"io/fs"
 	stdlog "log"
 	"os"
+	"path/filepath"
+	"regexp"
 	"sync"
 	"time"
 
@@ -21,6 +25,36 @@ type BillToBill struct {
 	Billnumber_to string `gorm:"index:,not null" json:"billnumber_to"`
 	Reason        string `gorm:"not null" json:"reason"`
 	Identified_by string `gorm:"index:,not null" json:"identified_by"`
+}
+
+type compareItem struct {
+	Score        float64 `json:"score"`
+	ScoreOther   float64 `json:"score_other"` // score for other bill
+	Explanation  string  `json:"explanation"`
+	ComparedDocs string  `json:"compared_docs"`
+}
+
+type filterFunc func(string) bool
+
+// Walk directory with a filter. Returns the filepaths that
+// pass the 'testPath' function
+// There is an exported function in the `bills` package that does this
+func walkDirFilter(root string, testPath filterFunc) (filePaths []string, err error) {
+	defer log.Info().Msg("Done collecting filepaths.")
+	log.Info().Msgf("Getting all file paths in %s.  This may take a while.\n", root)
+	filePaths = make([]string, 0)
+	accumulate := func(fpath string, entry fs.DirEntry, err error) error {
+		if err != nil {
+			log.Error().Err(err)
+			return err
+		}
+		if testPath(fpath) {
+			filePaths = append(filePaths, fpath)
+		}
+		return nil
+	}
+	err = filepath.WalkDir(root, accumulate)
+	return
 }
 
 func GetRelatedDb(dbname string) *gorm.DB {
@@ -66,27 +100,63 @@ func LoadRelatedMap(jsonPath string) (*sync.Map, error) {
 
 //TODO create related sync.Map from individual json files
 
+var similarCategoryJsonFilter = func(testPath string) bool {
+	matched, err := regexp.MatchString(`esSimilarCategory`, testPath)
+	matchedJson, err2 := regexp.MatchString(`\.json$`, testPath)
+	if err != nil || err2 != nil {
+		return false
+	}
+	return matched && matchedJson
+}
+
+func processRelatedJson(filePath string, similarityChannel chan compareItem, sem chan bool, wg *sync.WaitGroup) error {
+	defer func() {
+		log.Info().Msgf("Finished processing: %s\n", filePath)
+		<-sem
+	}()
+	file, err := os.ReadFile(filePath)
+	if err != nil {
+		log.Error().Msgf("Error reading data.json: %s", err)
+		return err
+	}
+	var dat compareItem
+	_ = json.Unmarshal([]byte(file), &dat)
+
+	// TODO: handle dat and put it into the channel
+}
+
 // jsonPath := RelatedJsonPath
 // db := GetDb(BILLSRELATED_DB)
-func LoadBillsRelatedToDBFromJson(db *gorm.DB, jsonPath string) {
-	log.Info().Msgf("Loading titles to database from json file: %s", jsonPath)
-	relatedMap, error := LoadRelatedMap(jsonPath)
+func LoadBillsRelatedToDBFromJson(db *gorm.DB, parentPath string) {
+	log.Info().Msgf("Loading titles to database from json files in directory: %s", parentPath)
+	defer log.Info().Msg("Done processing similar bill json")
+	dataJsonFiles, error := walkDirFilter(parentPath, similarCategoryJsonFilter)
 	if error != nil {
-		log.Fatal().Msgf("Error loading titles: %s", error)
+		log.Fatal().Msgf("Error getting files list: %s", error)
 	}
-	relatedMap.Range(func(key, value interface{}) bool {
-		billnumbers := value.([]string)
-		if len(billnumbers) > 0 {
-			log.Info().Msgf("Adding billnumbers %+v to title `%s`", billnumbers, key)
-			bills := []*Bill{}
-			for _, billnumber := range billnumbers {
-				billnumberversion := billnumber + "ih"
-				bills = append(bills, &Bill{Billnumber: billnumber, Billnumberversion: billnumberversion})
-			}
-			title := Title{Title: key.(string), Bills: bills}
-			db.Create(&title)
+	maxopenfiles := 100
+	sem := make(chan bool, maxopenfiles)
+	similarityChannel := make(chan compareItem)
+	wg := &sync.WaitGroup{}
+	wg.Add(len(dataJsonFiles))
+	go func() {
+		wg.Wait()
+		close(similarityChannel)
+	}()
 
+	go func() {
+		for range dataJsonFiles {
+			compare := <-similarityChannel
+			log.Debug().Msgf("Got compare item from Channel: %v\n", compare)
+			// TODO: insert into db
 		}
-		return true
-	})
+	}()
+
+	for _, jpath := range dataJsonFiles {
+		sem <- true
+		go processRelatedJson(jpath, similarityChannel, sem, wg)
+	}
+	for i := 0; i < cap(sem); i++ {
+		sem <- true
+	}
 }

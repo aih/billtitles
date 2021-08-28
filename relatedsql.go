@@ -31,9 +31,9 @@ type BillToBill struct {
 
 type compareItem struct {
 	Score        float64 `json:"score"`
-	ScoreOther   float64 `json:"score_other"` // score for other bill
+	ScoreOther   float64 `json:"scoreother"` // score for other bill
 	Explanation  string  `json:"explanation"`
-	ComparedDocs string  `json:"compared_docs"`
+	ComparedDocs string  `json:"compareddocs"`
 }
 
 type filterFunc func(string) bool
@@ -59,7 +59,7 @@ func walkDirFilter(root string, testPath filterFunc) (filePaths []string, err er
 	return
 }
 
-func getRelatedDb(dbname string) *gorm.DB {
+func GetRelatedDb(dbname string) *gorm.DB {
 	if dbname == "" {
 		dbname = BILLSRELATED_DB
 	}
@@ -91,10 +91,9 @@ func similarCategoryJsonFilter(testPath string) bool {
 	return matched && matchedJson
 }
 
-func processRelatedJson(filePath string, similarityChannel chan compareItem, sem chan bool, wg *sync.WaitGroup) error {
+func processRelatedJson(filePath string, similarityChannel chan map[string]compareItem, sem chan bool) error {
 	defer func() {
 		log.Info().Msgf("Finished processing: %s\n", filePath)
-		wg.Done()
 		<-sem
 	}()
 	file, err := os.ReadFile(filePath)
@@ -102,7 +101,7 @@ func processRelatedJson(filePath string, similarityChannel chan compareItem, sem
 		log.Error().Msgf("Error reading data.json: %s", err)
 		return err
 	}
-	var dat compareItem
+	var dat map[string]compareItem
 	_ = json.Unmarshal([]byte(file), &dat)
 	similarityChannel <- dat
 	return nil
@@ -117,41 +116,45 @@ func LoadBillsRelatedToDBFromJson(db *gorm.DB, parentPath string) {
 	if error != nil {
 		log.Fatal().Msgf("Error getting files list: %s", error)
 	}
+	log.Info().Msgf("Found %d json files", len(dataJsonFiles))
 	maxopenfiles := 100
 	sem := make(chan bool, maxopenfiles)
-	similarityChannel := make(chan compareItem)
+	compareMapChannel := make(chan map[string]compareItem)
 	wg := &sync.WaitGroup{}
-	wg.Add(len(dataJsonFiles))
-	go func() {
-		wg.Wait()
-		close(similarityChannel)
-	}()
+	for range dataJsonFiles {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			compareMap := <-compareMapChannel
+			log.Debug().Msgf("Got compare map from Channel: %+v\n", compareMap)
+			for _, compare := range compareMap {
+				bills := strings.Split(compare.ComparedDocs, "-")
+				if len(bills) != 2 {
+					log.Error().Msgf("Error parsing bills: %s", compare.ComparedDocs)
+					continue
+				}
+				// TODO: can also test if the key of the map is equal to bills[1]
 
-	go func() {
-		for range dataJsonFiles {
-			compare := <-similarityChannel
-			log.Debug().Msgf("Got compare item from Channel: %v\n", compare)
-			bills := strings.Split(compare.ComparedDocs, "-")
-			if len(bills) != 2 {
-				log.Error().Msgf("Error parsing bills: %s", compare.ComparedDocs)
-				continue
+				// Create a billtobill item from compare and insert into db
+				billtobill := BillToBill{
+					Billnumber:    bills[0],
+					Billnumber_to: bills[1],
+					Reason:        compare.Explanation,
+					Score:         compare.Score,
+					ScoreOther:    compare.ScoreOther,
+					Identified_by: "BillMap",
+				}
+				db.Create(&billtobill)
+				log.Debug().Msgf("Saved compare item to db")
 			}
-
-			// Create a billtobill item from compare and insert into db
-			billtobill := BillToBill{
-				Billnumber:    bills[0],
-				Billnumber_to: bills[1],
-				Reason:        compare.Explanation,
-				Score:         compare.Score,
-				ScoreOther:    compare.ScoreOther,
-				Identified_by: "BillMap",
-			}
-			db.Create(&billtobill)
-		}
-	}()
+		}()
+	}
 
 	for _, jpath := range dataJsonFiles {
+		log.Debug().Msgf("Processing: %s", jpath)
 		sem <- true
-		go processRelatedJson(jpath, similarityChannel, sem, wg)
+		go processRelatedJson(jpath, compareMapChannel, sem)
 	}
+	wg.Wait()
+	close(compareMapChannel)
 }

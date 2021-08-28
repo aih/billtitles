@@ -33,7 +33,6 @@ type BillTitle struct {
 }
 
 const BILLTITLES_DB = "billtitles.db"
-const BILLTITLESNEW_DB = "billtitlesnew.db"
 
 func BillNumberVersionToBillNumber(billNumberVersion string) string {
 	return BillnumberRegexCompiled.ReplaceAllString(billNumberVersion, "$1$2$3")

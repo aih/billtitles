@@ -49,7 +49,7 @@ func LoadTitlesMap(titlePath string) (*sync.Map, error) {
 	}
 	log.Debug().Msgf("Path to JSON file: %s", titlePath)
 	var err error
-	titleMap, err = UnmarshalJsonFile(titlePath)
+	titleMap, err = UnmarshalTitlesJsonFile(titlePath)
 	if err != nil {
 		return nil, err
 	} else {

@@ -38,8 +38,7 @@ func main() {
 		}
 		log.Debug().Msgf("%v", billnumbers)
 	*/
-	billtitles.LoadTitlesToDBFromJson(billtitles.GetRelatedDb(billtitles.BILLSRELATED_DB), billtitles.TitlesPath)
-
-	// TODO: create services to expose the map and add/remove functions
+	billtitles.LoadBillTitleToDBFromJson(billtitles.GetDb(billtitles.BILLTITLES_DB), billtitles.TitlesPath, false)
+	billtitles.LoadBillTitleToDBFromJson(billtitles.GetDb(billtitles.BILLTITLES_DB), billtitles.MainTitlesPath, true)
 
 }

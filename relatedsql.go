@@ -21,9 +21,9 @@ const BILLSRELATED_DB = "billsrelated.db"
 
 type BillToBill struct {
 	gorm.Model
-	Billnumber    string  `gorm:"index:,not null" json:"billnumber"`
-	Billnumber_to string  `gorm:"index:,not null" json:"billnumber_to"`
-	Reason        string  `gorm:"not null" json:"reason"`
+	Billnumber    string  `gorm:"UNIQUE_INDEX:compositeindex;index:,not null" json:"billnumber"`
+	Billnumber_to string  `gorm:"UNIQUE_INDEX:compositeindex;index:,not null" json:"billnumber_to"`
+	Reason        string  `gorm:"UNIQUE_INDEX:compositeindex;not null" json:"reason"`
 	Score         float64 `json:"score"`
 	ScoreOther    float64 `json:"score_other"` // score for other bill
 	Identified_by string  `gorm:"index:,not null" json:"identified_by"`
@@ -118,14 +118,21 @@ func LoadBillsRelatedToDBFromJson(db *gorm.DB, parentPath string) {
 	}
 	log.Info().Msgf("Found %d json files", len(dataJsonFiles))
 	maxopenfiles := 100
+	// print a message every 100 files
+	reportAt := 100
 	sem := make(chan bool, maxopenfiles)
 	compareMapChannel := make(chan map[string]compareItem)
 	wg := &sync.WaitGroup{}
+	count := 0
 	for range dataJsonFiles {
 		wg.Add(1)
+		count++
 		go func() {
 			defer wg.Done()
 			compareMap := <-compareMapChannel
+			if count%reportAt == 0 {
+				log.Info().Msgf("Processed %d files", count)
+			}
 			log.Debug().Msgf("Got compare map from Channel: %+v\n", compareMap)
 			for _, compare := range compareMap {
 				bills := strings.Split(compare.ComparedDocs, "-")

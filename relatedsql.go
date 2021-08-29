@@ -109,7 +109,7 @@ func processRelatedJson(filePath string, similarityChannel chan map[string]compa
 
 // jsonPath := RelatedJsonPath
 // db := GetDb(BILLSRELATED_DB)
-func LoadBillsRelatedToDBFromJson(db *gorm.DB, parentPath string) {
+func LoadBillsRelatedToDBFromJson(parentPath string) {
 	log.Info().Msgf("Loading titles to database from json files in directory: %s", parentPath)
 	defer log.Info().Msg("Done processing similar bill json")
 	dataJsonFiles, error := walkDirFilter(parentPath, similarCategoryJsonFilter)
@@ -117,7 +117,7 @@ func LoadBillsRelatedToDBFromJson(db *gorm.DB, parentPath string) {
 		log.Fatal().Msgf("Error getting files list: %s", error)
 	}
 	log.Info().Msgf("Found %d json files", len(dataJsonFiles))
-	maxopenfiles := 100
+	maxopenfiles := 20
 	// print a message every 100 files
 	reportAt := 100
 	sem := make(chan bool, maxopenfiles)
@@ -128,6 +128,8 @@ func LoadBillsRelatedToDBFromJson(db *gorm.DB, parentPath string) {
 		wg.Add(1)
 		count++
 		go func() {
+			// Create separate connection to avoid locking
+			db := GetRelatedDb(BILLTITLES_DB)
 			defer wg.Done()
 			compareMap := <-compareMapChannel
 			if count%reportAt == 0 {

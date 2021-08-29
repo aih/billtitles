@@ -123,16 +123,11 @@ func LoadBillsRelatedToDBFromJson(parentPath string) {
 	sem := make(chan bool, maxopenfiles)
 	compareMapChannel := make(chan map[string]compareItem)
 	wg := &sync.WaitGroup{}
-	for _, jpath := range dataJsonFiles {
-		log.Debug().Msgf("Processing: %s", jpath)
-		sem <- true
-		go processRelatedJson(jpath, compareMapChannel, sem)
-	}
 	count := 0
 	for range dataJsonFiles {
 		wg.Add(1)
 		count++
-		func() {
+		go func() {
 			defer wg.Done()
 			compareMap := <-compareMapChannel
 			// Create separate connection to avoid locking
@@ -162,6 +157,11 @@ func LoadBillsRelatedToDBFromJson(parentPath string) {
 				log.Debug().Msgf("Saved compare item to db")
 			}
 		}()
+	}
+	for _, jpath := range dataJsonFiles {
+		log.Debug().Msgf("Processing: %s", jpath)
+		sem <- true
+		processRelatedJson(jpath, compareMapChannel, sem)
 	}
 
 	wg.Wait()

@@ -128,10 +128,10 @@ func LoadBillsRelatedToDBFromJson(parentPath string) {
 		wg.Add(1)
 		count++
 		go func() {
-			// Create separate connection to avoid locking
-			db := GetRelatedDb(BILLTITLES_DB)
 			defer wg.Done()
 			compareMap := <-compareMapChannel
+			// Create separate connection to avoid locking
+			db := GetRelatedDb(BILLTITLES_DB)
 			if count%reportAt == 0 {
 				log.Info().Msgf("Processed %d files", count)
 			}

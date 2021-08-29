@@ -8,7 +8,6 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/rs/zerolog/log"
@@ -91,20 +90,17 @@ func similarCategoryJsonFilter(testPath string) bool {
 	return matched && matchedJson
 }
 
-func processRelatedJson(filePath string, similarityChannel chan map[string]compareItem, sem chan bool) error {
+func processRelatedJson(filePath string) (dat map[string]compareItem, err error) {
 	defer func() {
 		log.Info().Msgf("Finished processing: %s\n", filePath)
-		<-sem
 	}()
 	file, err := os.ReadFile(filePath)
 	if err != nil {
 		log.Error().Msgf("Error reading data.json: %s", err)
-		return err
+		return nil, err
 	}
-	var dat map[string]compareItem
-	_ = json.Unmarshal([]byte(file), &dat)
-	similarityChannel <- dat
-	return nil
+	err = json.Unmarshal([]byte(file), &dat)
+	return dat, err
 }
 
 // jsonPath := RelatedJsonPath
@@ -117,52 +113,42 @@ func LoadBillsRelatedToDBFromJson(db *gorm.DB, parentPath string) {
 		log.Fatal().Msgf("Error getting files list: %s", error)
 	}
 	log.Info().Msgf("Found %d json files", len(dataJsonFiles))
-	maxopenfiles := 20
-	// print a message every 100 files
 	reportAt := 100
-	sem := make(chan bool, maxopenfiles)
-	compareMapChannel := make(chan map[string]compareItem)
-	wg := &sync.WaitGroup{}
 	count := 0
-	for range dataJsonFiles {
-		wg.Add(1)
-		count++
-		go func() {
-			defer wg.Done()
-			compareMap := <-compareMapChannel
-			// Create separate connection to avoid locking
-			if count%reportAt == 0 {
-				log.Info().Msgf("Processed %d files", count)
-			}
-			log.Debug().Msgf("Got compare map from Channel: %+v\n", compareMap)
-			for _, compare := range compareMap {
-				bills := strings.Split(compare.ComparedDocs, "-")
-				if len(bills) != 2 {
-					log.Error().Msgf("Error parsing bills: %s", compare.ComparedDocs)
-					continue
-				}
-				// TODO: can also test if the key of the map is equal to bills[1]
-
-				// Create a billtobill item from compare and insert into db
-				billtobill := BillToBill{
-					Billnumber:    bills[0],
-					Billnumber_to: bills[1],
-					Reason:        compare.Explanation,
-					Score:         compare.Score,
-					ScoreOther:    compare.ScoreOther,
-					Identified_by: "BillMap",
-				}
-				db.Create(&billtobill)
-				log.Debug().Msgf("Saved compare item to db")
-			}
-		}()
-	}
 	for _, jpath := range dataJsonFiles {
+		count++
 		log.Debug().Msgf("Processing: %s", jpath)
-		sem <- true
-		processRelatedJson(jpath, compareMapChannel, sem)
-	}
+		compareMap, err := processRelatedJson(jpath)
+		if err != nil {
+			log.Error().Msgf("Error processing json: %s", err)
+			continue
+		}
 
-	wg.Wait()
-	close(compareMapChannel)
+		log.Debug().Msgf("Got compare map: %+v\n", compareMap)
+
+		if count%reportAt == 0 {
+			log.Info().Msgf("Processed %d files", count)
+		}
+
+		for _, compare := range compareMap {
+			bills := strings.Split(compare.ComparedDocs, "-")
+			if len(bills) != 2 {
+				log.Error().Msgf("Error parsing bills: %s", compare.ComparedDocs)
+				continue
+			}
+			// TODO: can also test if the key of the map is equal to bills[1]
+
+			// Create a billtobill item from compare and insert into db
+			billtobill := BillToBill{
+				Billnumber:    bills[0],
+				Billnumber_to: bills[1],
+				Reason:        compare.Explanation,
+				Score:         compare.Score,
+				ScoreOther:    compare.ScoreOther,
+				Identified_by: "BillMap",
+			}
+			db.Create(&billtobill)
+			log.Debug().Msgf("Saved compare item to db")
+		}
+	}
 }

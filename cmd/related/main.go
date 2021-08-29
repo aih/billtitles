@@ -40,7 +40,7 @@ func main() {
 	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 	log.Debug().Msg("Log level set to Debug")
-	db := GetRelatedDb(BILLTITLES_DB)
-	billtitles.LoadBillsRelatedToDBFromJson(parentPath)
+	db := billtitles.GetRelatedDb(billtitles.BILLTITLES_DB)
+	billtitles.LoadBillsRelatedToDBFromJson(db, parentPath)
 
 }

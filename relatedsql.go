@@ -127,7 +127,7 @@ func LoadBillsRelatedToDBFromJson(parentPath string) {
 	for range dataJsonFiles {
 		wg.Add(1)
 		count++
-		go func() {
+		func() {
 			defer wg.Done()
 			compareMap := <-compareMapChannel
 			// Create separate connection to avoid locking

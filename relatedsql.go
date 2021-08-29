@@ -109,7 +109,7 @@ func processRelatedJson(filePath string, similarityChannel chan map[string]compa
 
 // jsonPath := RelatedJsonPath
 // db := GetDb(BILLSRELATED_DB)
-func LoadBillsRelatedToDBFromJson(parentPath string) {
+func LoadBillsRelatedToDBFromJson(db *gorm.DB, parentPath string) {
 	log.Info().Msgf("Loading titles to database from json files in directory: %s", parentPath)
 	defer log.Info().Msg("Done processing similar bill json")
 	dataJsonFiles, error := walkDirFilter(parentPath, similarCategoryJsonFilter)
@@ -131,7 +131,6 @@ func LoadBillsRelatedToDBFromJson(parentPath string) {
 			defer wg.Done()
 			compareMap := <-compareMapChannel
 			// Create separate connection to avoid locking
-			db := GetRelatedDb(BILLTITLES_DB)
 			if count%reportAt == 0 {
 				log.Info().Msgf("Processed %d files", count)
 			}

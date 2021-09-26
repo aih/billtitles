@@ -1,0 +1,13 @@
+# billtitles
+
+An application to load bill title data into a sql repository. This repository works in conjunction with `github.com/aih/bills`, a Go repository to process bill metadata files to create an index of `title: bills`.
+
+This repository provides a module that converts the json output from `bills` into sqlite3. It also provides a (crude) Go API to query for bills and titles.
+
+To test and build, install `cmake` and run `make`. This will initially take some time to load data, then run the tests and build three executables into the `cmd/bin` directory:
+
+billquery:: a Go http service to retrieve bill metadata by bill number, and retrieve related bills (superceded by the API at `billtitles-py`) 
+
+related:: collects the 'esSimilarCategory.json' files in the directory provided at `-p`, and adds them to the sql database
+
+titlesjson:: loads title data from files `data/titles.json` and `data/maintitles.json` into a sql repository (`billtitles.db`)
